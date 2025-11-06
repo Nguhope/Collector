@@ -1,0 +1,235 @@
+import { collectorApi } from "../services/api/collectorApi";
+import { authApi} from "../services/api/authApi"
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from  '../features/auth/authSlice';
+
+const store = configureStore({
+       reducer: {
+        auth: authReducer,
+        [authApi.reducerPath]: authApi.reducer,
+        [collectorApi.reducerPath]: collectorApi.reducer,
+
+       },
+       middleware: (getDefaultMiddleware) => 
+        getDefaultMiddleware().concat(authApi.middleware, collectorApi.middleware)
+
+})
+
+export default store///////
+
+import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import { setCredentials} from  "../../features/auth/authSlice";
+
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+export const authApi = createApi ({
+    reducerPath: 'authApi',
+    baseQuery: fetchBaseQuery({
+        baseUrl,
+        prepareHeaders: (headers) => {
+              const token = localStorage.getItem('auth_token');
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      headers.set('Content-Type', 'application/json');
+      headers.set('Accept', 'application/json');
+      return headers;
+        },
+    }),
+    endpoints: (builder) => ({
+        login: builder.mutation({
+            query: (credentials) => ({
+                url: '/auth/login',
+                method: 'POST',
+                body: credentials,
+            }),
+            async onQueryStarted(arg, {dispatch, queryFulfilled}) {
+                try {
+                    const {data} = await queryFulfilled;
+                    console.log('Login successful:', data);
+                    dispatch(setCredentials(data));
+                } catch (error) {
+                    console.error('Login failed:', error);
+                }
+            }
+        }),
+        logout: builder.mutation({
+            query: ( ) => ({
+                url: '/auth/logout',
+                method: 'POST',
+            }),
+            async onQueryStarted(arg, {dispatch}) {
+                dispatch(logout());
+            }
+        }),
+        getCurrentUser: builder.query({
+            query: () => ({
+                url: '/auth/user',
+            }),
+            async onQueryStarted(arg, {dispatch, queryFulfilled}) {
+                try {
+                    const {data} = await queryFulfilled;
+                    console.log('Fetched current user:', data);
+                } catch (error) {
+                    console.error('Failed to fetch current user:', error);
+                }
+            }
+        }), 
+        
+    forgetPassword: builder.mutation({
+      query:(credentials) => ({
+        url: '/forget-password',
+        method: 'post',
+        body: credentials,
+
+      }),
+      async onQueryStarted(arg,{ queryFulfilled }  ) {
+        try {
+          const {data} =  await queryFulfilled;
+          console.log(data, " requete email envoyé");
+          
+        } catch {}
+      }
+
+    }),
+
+    resetPassword: builder.mutation({
+        query:(credentials) => ({
+        url: '/reset-password',
+        method: 'post',
+        body: credentials,
+
+      }),
+      async onQueryStarted(arg,{ queryFulfilled }  ) {
+        try {
+          const {data} =  await queryFulfilled;
+          console.log(data, " requete  reset email envoyé");
+          
+        } catch {}
+      }
+
+    })
+    
+    }),
+});
+
+const {useLoginMutation, useLogoutMutation, useGetCurrentUserQuery, useForgetPasswordMutation, useResetPasswordMutation } = authApi;      
+
+export {useLoginMutation, useLogoutMutation, useGetCurrentUserQuery};
+
+import {createSlice} from '@reduxjs/toolkit';
+
+const initialState = {
+  currentUser: null,
+  token: null,
+  loading: false,
+  error: null,
+  isAuthenticated: false,
+};
+
+const authSlice = createSlice({
+    name: 'auth',
+    initialState,
+    reducers: {
+        setCredentials: (state, action) => {
+               state.currentUser = action.payload.user;
+               state.token = action.payload.token;
+               state.isAuthentificated = true;
+               state.error = null;
+        },
+        clearCredentials: (state) => {
+            state.currentUser = null;
+            state.token = null;
+            state.isAuthenticated = false;
+            state.error = null;
+        },
+        setError: (state, action) => {
+            state.error = action.payload;
+            state.loading = false
+        },
+        setLoading: (state, action) => {
+            state.loading = action.payload;
+        },
+    },
+});
+
+export const { setCredentials, clearCredentials, setError, setLoading} = authSlice.actions;
+
+export default authSlice.reducer;
+
+
+// src/hooks/useAuthRedux.js
+import { useDispatch, useSelector } from 'react-redux';
+import {useForgetPasswordMutation, useLoginMutation, useLogoutMutation, useResetPasswordMutation} from '../services/api/authApi'
+import { setCredentials, clearCredentials, setError, setLoading } from '../features/auth/authSlice';
+
+export const useAuthRedux = () => {
+  const dispatch = useDispatch();
+  const auth = useSelector(state => state.auth);
+
+
+  const [loginApi] = useLoginMutation();
+  const [logoutApi] = useLogoutMutation();
+  const [forgetPasswordApi] = useForgetPasswordMutation();
+  const [resetPasswordApi] = useResetPasswordMutation();
+
+  const login = async (credentials) => {
+    try {
+      dispatch(setLoading(true));
+      const result = await loginApi(credentials).unwrap();
+      dispatch(setCredentials(result));
+      dispatch(setLoading(false));
+      return result;
+    } catch (err) {
+      dispatch(setError(err.data?.error || 'Erreur inconnue'));
+      dispatch(setLoading(false));
+      throw err;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await logoutApi().unwrap();
+    } finally {
+      dispatch(clearCredentials());
+    }
+  };
+
+
+  const forgetPassword= async (credentials) =>  {
+        
+        try {
+          dispatch(setLoading(true));
+         const result = await forgetPasswordApi(credentials).unwrap();
+         return result;
+        } catch (err) {
+          dispatch(setError(err.data?.error || 'Erreur inconnu lors du reset Password'))
+          dispatch(setLoading(false));
+          throw err;
+        }
+
+  }
+
+  const resetPassword = async (credentials) => {
+
+    try {
+      dispatch(setLoading(true))
+      const result = await resetPasswordApi(credentials).unwrap();
+      return result;
+    } catch (err) {
+        dispatch(setError(err.data?.error || 'Erreur inconnu lors du final reset Password'))
+          dispatch(setLoading(false));
+          throw err;
+    }
+  }
+
+
+
+  return {
+    ...auth,
+    login,
+    logout,
+    forgetPassword,
+    resetPassword
+  };
+};
