@@ -2,7 +2,7 @@
 
 import { apiSlice } from "./apiSlice";
 
-export const ClientSitesApi = apiSlice.injectEndpoints({
+export const clientSitesApi = apiSlice.injectEndpoints({
     endpoints: (builder) =>  ({
         getSitesAll: builder.query({
             query: () => "/client_site/all",
@@ -41,9 +41,9 @@ export const ClientSitesApi = apiSlice.injectEndpoints({
 });
 
 export const {
-    useGetSitesAllquery,
-    useGetSiteEquipmentquery,
+    useGetSitesAllQuery,
+    useGetSiteEquipmentQuery,
     useRegisterSiteMutation,
     useUpdateSiteMutation,
     useDeleteSiteMutation,
-}= ClientSitesApi;
+}= clientSitesApi;
