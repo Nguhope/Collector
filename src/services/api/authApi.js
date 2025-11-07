@@ -106,11 +106,30 @@ export const authApi = createApi ({
         } catch {}
       }
 
-    })
+    }),
+
+    
     
     }),
 });
 
+const baseQueryWithReauth = async (args, api, extraOptions) => {
+  let result = await baseQuery(args, api, extraOptions);
+
+  if (result.error && result.error.status === 401) {
+    // Tentative de refresh token
+    try {
+      await api.dispatch(useRefreshTokenMutation().initiate());
+      // Replay requête initiale avec nouveau token
+      result = await baseQuery(args, api, extraOptions);
+    } catch {
+      // logout automatique si refresh échoue
+      api.dispatch(clearCredentials());
+    }
+  }
+  return result;
+};
+
 const {useLoginMutation, useLogoutMutation, useGetCurrentUserQuery, useForgetPasswordMutation, useResetPasswordMutation } = authApi;      
 
-export {useLoginMutation, useLogoutMutation, useGetCurrentUserQuery};
+export {useLoginMutation, useLogoutMutation, useGetCurrentUserQuery, useForgetPasswordMutation, useResetPasswordMutation};

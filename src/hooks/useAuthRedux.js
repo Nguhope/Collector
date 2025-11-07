@@ -14,6 +14,23 @@ export const useAuthRedux = () => {
   const [forgetPasswordApi] = useForgetPasswordMutation();
   const [resetPasswordApi] = useResetPasswordMutation();
 
+  const [refreshTokenApi] = useRefreshTokenMutation();
+
+  // Fonction de refresh token utilisée sur requête expirée
+  const refreshToken = async () => {
+    try {
+      dispatch(setLoading(true));
+      const result = await refreshTokenApi().unwrap();
+      dispatch(setLoading(false));
+      return result;
+    } catch (err) {
+      dispatch(clearCredentials());
+      dispatch(setLoading(false));
+      throw err;
+    }
+  };
+
+
   const login = async (credentials) => {
     try {
       dispatch(setLoading(true));
@@ -71,6 +88,7 @@ export const useAuthRedux = () => {
     login,
     logout,
     forgetPassword,
-    resetPassword
+    resetPassword,
+    refreshToken
   };
 };

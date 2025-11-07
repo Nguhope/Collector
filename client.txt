@@ -1,0 +1,323 @@
+Clients
+
+
+GET
+/clients/all
+Get All Client
+
+
+Permet de lister tous les clients presents dans le systeme
+
+Returns:
+
+retourne une liste, chaque element contenant les informations suivantes:
+
+- **client_id** : l'identifiant du client
+- **nom**: le nom du client en question
+- **code** : le code identifiant le client
+- **sites** : la liste des sites appartenants au client. chaque site contenant le nombre le nombre d'equipements presents sur le site en question
+- **timestamp** : le temps de creation de nouveau client
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "client_id": "string",
+    "nom": "string",
+    "code": 0,
+    "sites": 0,
+    "equipements": 0,
+    "status": "string",
+    "timestamp": "2025-11-06T16:55:01.544Z"
+  }
+]
+No links
+
+POST
+/clients/register
+Register New Client
+
+
+pour enregistrer un client dans les systemes, il faut fournir les informations suivantes:
+
+- **nom** : le nom du client
+- **code**: un code identifiant le client
+Returns:
+
+retourne un json dont la cle, items contient les elements de collecte
+
+- **client_id** : l'identifiant du client
+- **nom**: le nom du client en question
+- **code** : le code identifiant le client
+- **sites** : la liste des sites appartenants au client qui est vide a la creation
+- **equipements** : la liste des equipements appartenant au client qui est vide a sa creation
+- **status** : le status du client a la creation
+- **timestamp** : le temps de creation de nouveau client
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "nom": "string",
+  "code": 0
+}
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "client_id": "string",
+  "nom": "string",
+  "code": 0,
+  "sites": 0,
+  "equipements": 0,
+  "status": "string",
+  "timestamp": "2025-11-06T16:55:01.545Z"
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+PUT
+/clients/update
+Update Client
+
+
+pour mettre a jour les informations sur un client dans le systeme, il faut fournir les informations suivantes:
+
+- **client_id** : l'identifiant du client a mettre a jour
+- **nom** : le nom du client
+- **code**: un code identifiant le client
+Returns:
+
+retourne un json dont la cle, items contient les elements de collecte
+
+- **client_id** : l'identifiant du client
+- **nom**: le nom du client en question
+- **code** : le code identifiant le client
+- **sites** : la liste des sites appartenants au client qui est vide a la creation
+- **equipements** : la liste des equipements appartenant au client qui est vide a sa creation
+- **status** : le status du client a la creation
+- **timestamp** : le temps de creation de nouveau client
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "client_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "nom": "string",
+  "code": 0
+}
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "client_id": "string",
+  "nom": "string",
+  "code": 0,
+  "sites": 0,
+  "equipements": 0,
+  "status": "string",
+  "timestamp": "2025-11-06T16:55:01.547Z"
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+GET
+/clients/{client_id}/infos
+Get One Client
+
+
+pour avoir les informations sur un client enregistre dans le systeme, il faut inserer l'identifiant du client dans l'url
+
+- **client_id** : l'identifiant du client a mettre a jour
+Returns:
+
+retourne un json dont la cle, items contient les elements de collecte
+
+- **client_id** : l'identifiant du client
+- **nom**: le nom du client en question
+- **code** : le code identifiant le client
+- **sites** : la liste des sites appartenants au client. chaque site contenant le nombre le nombre d'equipements presents sur le site en question
+- **timestamp** : le temps de creation de nouveau client
+Parameters
+Try it out
+Name	Description
+client_id *
+string
+(path)
+client_id
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "client_id": "string",
+  "nom": "string",
+  "code": 0,
+  "timestamp": "2025-11-06T16:55:01.548Z",
+  "sites": [
+    {
+      "site_id": "string",
+      "nom": "string",
+      "equipements": 0
+    }
+  ]
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+DELETE
+/clients/{client_id}
+Deactivate Client
+
+
+pour supprimer un client dans le systeme, il faut inserer l'identifiant du client dans l'url
+
+- **client_id** : l'identifiant du client a mettre a jour
+Returns:
+
+- 204 No-Content
+Parameters
+Try it out
+Name	Description
+client_id *
+string
+(path)
+client_id
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+true
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}

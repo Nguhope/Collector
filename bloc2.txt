@@ -1,0 +1,1459 @@
+users
+
+
+GET
+/users/list
+Get Users
+
+
+pour lister les utilisateurs enregistres dans le systeme.,
+
+Returns: une liste, chaque element contenant les informations suivantes:
+
+- **user_id** : l'identifiant de l'utilisateur nouvellement cree
+- **matricule**: le matricule de l'utilisateur
+- **email** : l'email de l'utilisateur
+- **password** : le mot de passe de l'utilisateur qui est crypte
+- **role_name** : le nom du role attribue a l'utilisateur
+- **role_id** : l'identifiant du role attribue a l'utilisateur
+- **status** : le status de l'utilisateur a sa creation qui est "activated"
+- **timestamp** : la date de creation du nouvel utilisateur
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "user_id": "string",
+    "matricule": 0,
+    "nom": "string",
+    "email": "user@example.com",
+    "password": "string",
+    "role_name": "string",
+    "role_id": "string",
+    "status": "string",
+    "timestamp": "2025-11-06T16:52:40.857Z"
+  }
+]
+No links
+
+GET
+/users/{user_id}
+Get User
+
+pour avoir les informations completes d'un utilisateur du systeme, il faut fournir les informations suivantes.
+
+- **user_id**: le matricule de l'utilisateur (obligatoire)
+Returns:
+
+- **user_id** : l'identifiant de l'utilisateur
+- **matricule**: le matricule de l'utilisateur
+- **email** : l'email de l'utilisateur
+- **password** : le mot de passe de l'utilisateur qui est crypte
+- **role_name** : le nom du role attribue a l'utilisateur
+- **role_id** : l'identifiant du role attribue a l'utilisateur
+- **status** : le status de l'utilisateur a sa creation qui est "activated"
+- **timestamp** : la date de creation du nouvel utilisateur
+Parameters
+Try it out
+Name	Description
+user_id *
+string
+(path)
+user_id
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "user_id": "string",
+  "matricule": 0,
+  "nom": "string",
+  "email": "user@example.com",
+  "password": "string",
+  "role_name": "string",
+  "role_id": "string",
+  "status": "string",
+  "timestamp": "2025-11-06T16:52:40.859Z"
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+POST
+/users/create
+Create User
+
+
+pour se creer un nouvel utilisteur dans le systeme, il faut fournir les informations suivantes.
+
+- **matricule**: le matricule de l'utilisateur (obligatoire)
+- **nom**: le nom de l'utilisateur a creer
+- **email**: l'addresse email de l'utilisateur
+- **password**: le mot de passe de l'utilisateur
+- **role_id**: le role a attribuer a un utilisateur
+Returns:
+
+- **user_id** : l'identifiant de l'utilisateur nouvellement cree
+- **matricule**: le matricule de l'utilisateur
+- **email** : l'email de l'utilisateur
+- **password** : le mot de passe de l'utilisateur qui est crypte
+- **role_name** : le nom du role attribue a l'utilisateur
+- **role_id** : l'identifiant du role attribue a l'utilisateur
+- **status** : le status de l'utilisateur a sa creation qui est "activated"
+- **timestamp** : la date de creation du nouvel utilisateur
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "matricule": 0,
+  "nom": "string",
+  "email": "user@example.com",
+  "password": "string",
+  "role_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "user_id": "string",
+  "matricule": 0,
+  "nom": "string",
+  "email": "user@example.com",
+  "password": "string",
+  "role_name": "string",
+  "role_id": "string",
+  "status": "string",
+  "timestamp": "2025-11-06T16:52:40.863Z"
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+PUT
+/users/update
+Update User
+
+
+pour se mettre a jour les informations basiques dans le systeme, il faut fournir les informations suivantes.
+
+NB: parmi les champs optionnels, seuls ceux fournis a l'api seront mis a jour
+
+- **user_id**: le matricule de l'utilisateur (obligatoire)
+- **matricule**: le matricule de l'utilisateur (optionnel)
+- **nom**: le nom de l'utilisateur a creer (optionnel)
+- **email**: l'addresse email de l'utilisateur (optionnel)
+- **password**: le mot de passe de l'utilisateur (optionnel)
+Returns: - user_id : l'identifiant de l'utilisateur nouvellement cree - matricule: le matricule de l'utilisateur - email : l'email de l'utilisateur - password : le mot de passe de l'utilisateur qui est crypte - role_name : le nom du role attribue a l'utilisateur - role_id : l'identifiant du role attribue a l'utilisateur - status : le status de l'utilisateur a sa creation qui est "activated" - timestamp : la date de creation du nouvel utilisateur
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "user_id": "string",
+  "nom": "string",
+  "matricule": 0,
+  "email": "user@example.com",
+  "password": "string"
+}
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "user_id": "string",
+  "matricule": 0,
+  "nom": "string",
+  "email": "user@example.com",
+  "password": "string",
+  "role_name": "string",
+  "role_id": "string",
+  "status": "string",
+  "timestamp": "2025-11-06T16:52:40.868Z"
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+DELETE
+/users/delete/{user_id}
+Deactivate User
+
+
+pour supprimer utilisateur dans le systeme, il faut fournir les informations suivantes.
+
+- **user_id**: le matricule de l'utilisateur (obligatoire)
+Returns: - 204 No-content
+
+Parameters
+Try it out
+Name	Description
+user_id *
+string
+(path)
+user_id
+Responses
+Code	Description	Links
+204	
+Successful Response
+
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+roles
+
+
+PUT
+/roles/update
+Update Role
+
+
+pour mettre a jour un role dans le systeme, il faut fournir les informations suivantes: parmi les champs optionnels, seuls ceux fournis par l'utilisateur qui seront mis a jour
+
+- **role_id** : l'identifiant du role a mettre a jour (obligatoire)
+- **name**: le nom du role (optionnel)
+- **description** : description du role (optionnel)
+- **permissions** : liste des nouvelles permissions a assigner au nouveau role
+Returns:
+
+- **role_id** : l'identifiant du role nouvellement cree
+- **name**: le nom du role a creer
+- **description** : l'email de l'utilisateur
+- **permissions** : la liste des permissions attribue au nouveau role
+- **timestamp** : le temps de creation du nouveau role
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "role_id": "string",
+  "name": "string",
+  "description": "string",
+  "permissions": []
+}
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "role_id": "string",
+  "name": "string",
+  "description": "string",
+  "permissions": [
+    {
+      "permission_id": "string",
+      "ressource": "string",
+      "action": "string"
+    }
+  ],
+  "timestamp": "2025-11-06T16:52:40.873Z"
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+POST
+/roles/create
+Create Role
+
+
+Le systeme implemente le RBAC dit hybride: une permission peut etre ajoutee ou retiree d'un role
+
+pour creer un role dans le systeme, il faut fournir les informations suivantes:
+
+- **name** : le nom du role a creer
+- **description**: une breve description du role a creer
+- **permissions** : liste des permissions a assigner au nouveau role
+Returns:
+
+- **role_id** : l'identifiant du role nouvellement cree
+- **name**: le nom du role a creer
+- **description** : l'email de l'utilisateur
+- **permissions** : la liste des permissions attribue au nouveau role
+- **timestamp** : le temps de creation du nouveau role
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "name": "string",
+  "description": "string",
+  "permissions": []
+}
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "role_id": "string",
+  "name": "string",
+  "description": "string",
+  "permissions": [
+    {
+      "permission_id": "string",
+      "ressource": "string",
+      "action": "string"
+    }
+  ],
+  "timestamp": "2025-11-06T16:52:40.876Z"
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+POST
+/roles/add_permissions
+Add Permissions
+
+
+pour ajouter une permission a un role, il faut fournir les informations suivantes:
+
+- **role_id** : l'identifiant du role
+- **permissions** : liste des permissions a assigner au role
+Returns:
+
+- **id** : l'identifiant du role nouvellement cree
+- **name**: le nom du role a creer
+- **description** : l'email de l'utilisateur
+- **permissions** : la liste des permissions attribue au nouveau role
+- **timestamp** : le temps de creation du nouveau role
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "role_id": "string",
+  "permissions": []
+}
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "description": "string",
+  "permissions": [
+    "string"
+  ]
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+GET
+/roles/list
+All Roles
+
+
+pour lister les roles dans le systeme
+
+Returns:
+
+- **role_id** : l'identifiant du role nouvellement cree
+- **name**: le nom du role a creer
+- **description** : l'email de l'utilisateur
+- **permissions** : la liste des permissions attribue au nouveau role
+- **timestamp** : le temps de creation du nouveau role
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "role_id": "string",
+    "name": "string",
+    "description": "string",
+    "permissions": [
+      {
+        "permission_id": "string",
+        "ressource": "string",
+        "action": "string"
+      }
+    ],
+    "timestamp": "2025-11-06T16:52:40.881Z"
+  }
+]
+No links
+
+DELETE
+/roles/{role_id}
+Delete Role
+
+
+pour supprimer un role dans le systeme, il faut fournir les informations suivantes:
+
+- **role_id** : l'identifiant du role a supprimer
+Returns:
+
+- **role_id** : l'identifiant du role nouvellement cree
+- **name**: le nom du role a creer
+- **description** : l'email de l'utilisateur
+- **permissions** : la liste des permissions attribue au nouveau role
+- **timestamp** : le temps de creation du nouveau role
+Parameters
+Try it out
+Name	Description
+role_id *
+string
+(path)
+role_id
+Responses
+Code	Description	Links
+204	
+Successful Response
+
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+client_site
+
+
+POST
+/client_site/register
+Register New Client Site
+
+
+Pour enregistrer un nouveau site d'un client, il faut fournir les informations suivantes:
+
+- **client_id** : l'identifiant du client dont on veut creer le nouveau site
+- **name**: le nom du site en question
+- **longitude** : coordonnees du site (longitude)
+- **latitude** : coordonnees du site (latitude)
+- **description** : breve description du site en cours de creation
+Returns:
+
+- **site_id** : l'identifiant du site nouvellement cree
+- **client_id**: l'identifiant du client dont le site est cree
+- **name** : le nom du site nouvellement cree
+- **longitude** : coordonnees du site (longitude)
+- **latitude** : coordonnees du site (latitude)
+- **description** : breve description du site
+- **equipements** : la liste des equipements du site nouvellement cree, qui sera vide
+- **timestamp** : le temps de creation du nouveau site
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "client_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "longitude": 0,
+  "latitude": 0,
+  "description": "string"
+}
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "site_id": "string",
+  "client_id": "string",
+  "name": "string",
+  "longitude": 0,
+  "latitude": 0,
+  "description": "string",
+  "equipements": [],
+  "timestamp": "2025-11-06T16:52:40.885Z"
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+GET
+/client_site/{site_id}/all_equipements
+List All Equipements
+
+
+Pour lister tous les equipements d'un site, il faut fournir les informations suivantes:
+
+les donnees sont retournees sous forme de pagination.
+
+- **site_id** : l'identifiant du site concernee
+Returns:
+
+retourne un json dont la cle, items contient les elements de collecte
+
+- **equipement_id** : l'identifiant de l'equipements
+- **ip**: l'addresse ip de l'equipement present dans le site
+- **marque** : la marque de l'equipement en question
+- **sources** : les sources de donnees definies par le fabriquant de l'equipement
+- **port** : le port de connexion a l'equipement
+- **username** : credentials de connexion a l'interface de la marque de l'equipement
+- **password** : mot de passe de connexion a l'interface
+- **description** : breve description de l'equipement
+- **modele** : le modele de l'equipement
+- **timestamp** : le temps de creation du nouveau de l'equipement
+Parameters
+Cancel
+Name	Description
+site_id *
+string($uuid)
+(path)
+site_id
+page
+integer
+(query)
+Page number
+
+1
+minimum: 1
+size
+integer
+(query)
+Page size
+
+50
+maximum: 100
+minimum: 1
+Please correct the following validation errors and try again.
+For 'site_id': Required field is not provided.
+Execute
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "items": [
+    {
+      "equipement_id": "string",
+      "ip": "string",
+      "marque": "string",
+      "sources": "string",
+      "port": 0,
+      "username": "string",
+      "password": "string",
+      "description": "string",
+      "modele": "string",
+      "timestamp": "2025-11-06T16:52:40.889Z"
+    }
+  ],
+  "total": 0,
+  "page": 1,
+  "size": 1,
+  "pages": 0
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+GET
+/client_site/all
+All Client Site
+
+
+ce endpoint permet de lister les sites clients, chaque site contient les informations sur tous ses equipements et le client.
+
+Returns:
+
+retourne un json dont la cle, items contient les elements de collecte
+
+- **site_id** : l'identifiant du site client
+- **name**: le nom du site en question
+- **lonitude** : coordonnees geographiques (longitude)
+- **latitude** : coordonnees geographiques (latitude)
+- **description** : breve description du site client
+- **timestamp** : le temps de creation du site client
+- **client** : les informations sur le client dont appartient le site
+- **equipements** : la liste contenant les informations sur les equipements present sur le site
+Parameters
+Cancel
+No parameters
+
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'GET' \
+  'http://192.168.10.96:8000/client_site/all' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NTg2IiwiZW1haWwiOiJjYWJyZWwubm91YmlAZWxlY2l0Lm5ldCIsInVzZXJfaWQiOiIyMGJlYTc1NC04MzFkLTQ3N2MtYmVkYi1lNGRkNTllMzdjOGQiLCJyb2xlX25hbWUiOiJhZG1pbiIsInJvbGVfaWQiOiI2NzZmNDhkMC0xMWZiLTQ5M2ItODI2Ni1iZTNhMjQ3YzQwMjYiLCJqdGkiOiIyNDJlN2FmNC1hNzQ0LTQ2YTAtYTZmNy1iNzFlMjFhNGZiNGMiLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNjIwMzk4fQ.JaPQTr5mdCc6CF_MDn5WaZGtCf-nkWnsv8LNwFQV4Lg'
+Request URL
+http://192.168.10.96:8000/client_site/all
+Server response
+Code	Details
+200	
+Response body
+Download
+[
+  {
+    "site_id": "0c5c5381-c357-4abc-ba1f-9fb584006a3a",
+    "name": "LOUM",
+    "longitude": 26.45,
+    "latitude": 43.56,
+    "description": "site du client de bonaberi",
+    "timestamp": "2025-08-13T09:49:13",
+    "client": {
+      "client_id": "48f41668-650f-4179-9a8e-a00945bda333",
+      "nom": "BICEC Bank",
+      "code": 984,
+      "timestamp": "2025-08-07T08:12:20"
+    },
+    "equipements": [
+      {
+        "equipement_id": "70e97152-76f0-4d16-9d28-dc2f6d9b41ab",
+        "ip": "1.1.1.1",
+        "marque": "mmmm",
+        "sources": [
+          "hhhhhhh",
+          "jjjjjjjjj"
+        ],
+        "port": 100,
+        "username": "4470",
+        "password": "passoword_hashed",
+        "description": "jjjjjj",
+        "modele": "mmm",
+        "timestamp": "2025-08-22T16:38:51"
+      }
+    ]
+  },
+  {
+    "site_id": "22e308e7-4869-484d-bd86-233f5c4816c5",
+    "name": "YASSA",
+    "longitude": 27.45,
+    "latitude": 48.56,
+    "description": "site du client de bonaberi",
+    "timestamp": "2025-08-13T09:49:31",
+    "client": {
+      "client_id": "48f41668-650f-4179-9a8e-a00945bda333",
+      "nom": "BICEC Bank",
+      "code": 984,
+      "timestamp": "2025-08-07T08:12:20"
+    },
+    "equipements": []
+  },
+  {
+    "site_id": "cb96e92e-08ea-494a-be82-9d664934e3d6",
+    "name": "BONABERI 2",
+    "longitude": 26.45,
+    "latitude": 43.56,
+    "description": "site du client de bonaberi",
+    "timestamp": "2025-08-13T09:48:52",
+    "client": {
+      "client_id": "48f41668-650f-4179-9a8e-a00945bda333",
+      "nom": "BICEC Bank",
+      "code": 984,
+      "timestamp": "2025-08-07T08:12:20"
+    },
+    "equipements": []
+  }
+]
+Response headers
+ content-length: 1220 
+ content-type: application/json 
+ date: Thu,06 Nov 2025 14:50:20 GMT 
+ server: uvicorn 
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "site_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "name": "string",
+    "longitude": 0,
+    "latitude": 0,
+    "description": "string",
+    "timestamp": "2025-11-06T16:52:40.895Z",
+    "client": {
+      "client_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nom": "string",
+      "code": 0,
+      "timestamp": "2025-11-06T16:52:40.895Z"
+    },
+    "equipements": [
+      {
+        "equipement_id": "string",
+        "ip": "string",
+        "marque": "string",
+        "sources": "string",
+        "port": 0,
+        "username": "string",
+        "password": "string",
+        "description": "string",
+        "modele": "string",
+        "timestamp": "2025-11-06T16:52:40.895Z"
+      }
+    ]
+  }
+]
+No links
+
+PUT
+/client_site/update
+Update Site
+
+
+Pour update les informations d'un site, il faut fourni des informations optionnelles et obligatoires.
+
+seuls les champs fournis parmis ceux optionels seront mis a jour
+
+- **site_id** : l'identifiant du site client (obligatoire)
+- **name**: le nom du site en question (optionel)
+- **lonitude** : coordonnees geographiques (optionel)
+- **latitude** : coordonnees geographiques (optionel)
+- **description** : breve description du site client (optionel)
+Returns:
+
+retourne un json dont la cle, items contient les elements de collecte
+
+- **site_id** : l'identifiant du site client
+- **name**: le nom du site en question
+- **lonitude** : coordonnees geographiques (longitude)
+- **latitude** : coordonnees geographiques (latitude)
+- **description** : breve description du site client
+- **timestamp** : le temps de creation du site client
+- **client** : les informations sur le client dont appartient le site
+- **equipements** : la liste contenant les informations sur les equipements present sur le site
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "site_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "longitude": 0,
+  "latitude": 0,
+  "description": "string"
+}
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "site_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "longitude": 0,
+  "latitude": 0,
+  "description": "string",
+  "timestamp": "2025-11-06T16:52:40.899Z",
+  "client": {
+    "client_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "nom": "string",
+    "code": 0,
+    "timestamp": "2025-11-06T16:52:40.899Z"
+  },
+  "equipements": [
+    {
+      "equipement_id": "string",
+      "ip": "string",
+      "marque": "string",
+      "sources": "string",
+      "port": 0,
+      "username": "string",
+      "password": "string",
+      "description": "string",
+      "modele": "string",
+      "timestamp": "2025-11-06T16:52:40.899Z"
+    }
+  ]
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+DELETE
+/client_site/{site_id}
+Delete Site
+
+
+equipements
+
+
+POST
+/equipements/register
+Register New Equipement
+
+
+pour enregistrer les equipements dans les systemes, il faut se rassurer que le site client existe deja. Et il faut fournir les informations suivantes :
+
+- **ip** : l'addresse ip de l'equipement
+- **site_id**: l'identifiant du site ou doit etre enregistre l'equipement
+- **marque** : la marque de l'equipement a enregistrer
+- **sources** : les differentes sources de donnees du fournisseurs
+- **username** : le credential pour se connecter a l'interface de l'equipement
+- **password** : mot de passe de connexion a l'interface de l'equipement
+- **description** : breve description de l'equipement a enregistrer
+- **modele** : modele de l'equipement
+Returns:
+
+retourne un json dont la cle, items contient les elements de collecte
+
+- **ip** : l'identifiant du site client
+- **site_id**: le nom du site en question
+- **marque** : coordonnees geographiques (longitude)
+- **sources** : coordonnees geographiques (latitude)
+- **port** : breve description du site client
+- **username** : le temps de creation du site client
+- **password** : les informations sur le client dont appartient le site
+- **description** : la liste contenant les informations sur les equipements present sur le site
+- **modele** : le modele de l'equipement a enregistrer
+- **equipement_id** : l'identifiant de l'equipement a enregistrer
+- **timestamp** : le temps de creation de nouvel equipement
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "ip": "string",
+  "site_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "marque": "string",
+  "sources": [
+    "string"
+  ],
+  "port": 0,
+  "username": "string",
+  "password": "string",
+  "description": "string",
+  "modele": "string"
+}
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "ip": "string",
+  "site_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "marque": "string",
+  "sources": [
+    "string"
+  ],
+  "port": 0,
+  "username": "string",
+  "password": "string",
+  "description": "string",
+  "modele": "string",
+  "equipement_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "timestamp": "2025-11-06T16:52:40.903Z"
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+GET
+/equipements/all
+Get All Equipements
+
+
+endpoint pour lister tous les equipements presents dans le systeme. renvoie le resultat avec la pagination
+
+Returns:
+
+retourne un json dont la cle, items contient une liste d'elements de collecte
+
+- **equipement_id** : l'identifiant du site client
+- **ip**: l'addresse ip de l'equipement
+- **marque** : la marque de l'equipement
+- **sources** : les sources de donnees de l'equipement
+- **port** : le port d'access de l'equipement
+- **username** : credential de connexion a l'interface de l'equipement
+- **password** : mot de passe de connexion a l'interface de l'equipement
+- **description** : la liste contenant les informations sur les equipements present sur le site
+- **modele** : le modele de l'equipement
+- **timestamp** : le temps de creation de l'equipement
+- **client_site** : les informations sur le site dont appartient un equipement
+Parameters
+Try it out
+Name	Description
+page
+integer
+(query)
+Page number
+
+Default value : 1
+
+1
+minimum: 1
+size
+integer
+(query)
+Page size
+
+Default value : 50
+
+50
+maximum: 100
+minimum: 1
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "items": [
+    {
+      "equipement_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "ip": "string",
+      "marque": "string",
+      "sources": [
+        "string"
+      ],
+      "port": 0,
+      "username": "string",
+      "password": "string",
+      "description": "string",
+      "modele": "string",
+      "timestamp": "2025-11-06T16:52:40.907Z",
+      "client_site": {
+        "site_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "client_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "name": "string",
+        "longitude": 0,
+        "latitude": 0,
+        "description": "string"
+      }
+    }
+  ],
+  "total": 0,
+  "page": 1,
+  "size": 1,
+  "pages": 0
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+PUT
+/equipements/update
+Update Equipement
+
+
+Pour mettre a jour les informations d'un equipement dans le systeme, il faut fournir les informations suivantes:
+
+parmi les champs optionnels, seuls chez fournis seront mis a jour dans le systeme
+
+- **equipement_id** : l'identifiant du site client (obligatoire)
+- **ip**: l'addresse ip de l'equipement (optionnel)
+- **marque** : la marque de l'equipement (optionnel)
+- **sources** : les sources de donnees de l'equipement (optionnel)
+- **port** : le port d'access de l'equipement (optionnel)
+- **username** : credential de connexion a l'interface de l'equipement (optionnel)
+- **password** : mot de passe de connexion a l'interface de l'equipement (optionnel)
+- **description** : la liste contenant les informations sur les equipements present sur le site (optionnel)
+- **modele** : le modele de l'equipement (optionnel)
+Returns:
+
+retourne un json dont la cle, items contient une liste d'elements de collecte
+
+- **equipement_id** : l'identifiant du site client
+- **ip**: l'addresse ip de l'equipement
+- **marque** : la marque de l'equipement
+- **sources** : les sources de donnees de l'equipement
+- **port** : le port d'access de l'equipement
+- **username** : credential de connexion a l'interface de l'equipement
+- **password** : mot de passe de connexion a l'interface de l'equipement
+- **description** : la liste contenant les informations sur les equipements present sur le site
+- **modele** : le modele de l'equipement
+- **timestamp** : le temps de creation de l'equipement
+- **client_site** : les informations sur le site dont appartient un equipement
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "equipement_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "ip": "string",
+  "marque": "string",
+  "sources": [
+    "string"
+  ],
+  "port": 0,
+  "username": "string",
+  "password": "string",
+  "description": "string",
+  "modele": "string"
+}
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "ip": "string",
+  "site_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "marque": "string",
+  "sources": [
+    "string"
+  ],
+  "port": 0,
+  "username": "string",
+  "password": "string",
+  "description": "string",
+  "modele": "string",
+  "equipement_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "timestamp": "2025-11-06T16:52:40.911Z"
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+DELETE
+/equipements/{equipement_id}
+Delete Equipement
+
+
+Pour supprimer un equipement dans le systeme, il faut fournir son identifiant
+
+- **equipement_id** : l'identifiant du site client (obligatoire)
+Returns: - 204 No-Content
+
+Parameters
+Try it out
+Name	Description
+equipement_id *
+string
+(path)
+equipement_id
+Responses
+Code	Description	Links
+204	
+Successful Response
+
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
