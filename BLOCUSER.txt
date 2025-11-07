@@ -1,0 +1,425 @@
+GET
+/users/list
+Get Users
+
+
+pour lister les utilisateurs enregistres dans le systeme.,
+
+Returns: une liste, chaque element contenant les informations suivantes:
+
+- **user_id** : l'identifiant de l'utilisateur nouvellement cree
+- **matricule**: le matricule de l'utilisateur
+- **email** : l'email de l'utilisateur
+- **password** : le mot de passe de l'utilisateur qui est crypte
+- **role_name** : le nom du role attribue a l'utilisateur
+- **role_id** : l'identifiant du role attribue a l'utilisateur
+- **status** : le status de l'utilisateur a sa creation qui est "activated"
+- **timestamp** : la date de creation du nouvel utilisateur
+Parameters
+Cancel
+No parameters
+
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'GET' \
+  'http://192.168.10.96:8000/users/list' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NTg2IiwiZW1haWwiOiJjYWJyZWwubm91YmlAZWxlY2l0Lm5ldCIsInVzZXJfaWQiOiIyMGJlYTc1NC04MzFkLTQ3N2MtYmVkYi1lNGRkNTllMzdjOGQiLCJyb2xlX25hbWUiOiJhZG1pbiIsInJvbGVfaWQiOiI2NzZmNDhkMC0xMWZiLTQ5M2ItODI2Ni1iZTNhMjQ3YzQwMjYiLCJqdGkiOiJkYzc0YmE2OS1kOGFkLTQyOGQtODE1OS00ZThhZDBlN2FlNDEiLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNjgxNDg4fQ.4weUOifd8B7h1DghJ0LMO4h5xHXb6O1FckRwRk3N2fs'
+Request URL
+http://192.168.10.96:8000/users/list
+Server response
+Code	Details
+200	
+Response body
+Download
+[
+  {
+    "user_id": "e9d19686-78f7-406c-a14d-7e11ba8ca36f",
+    "matricule": 2025,
+    "nom": "elecit",
+    "email": "elecit@elecit.net",
+    "password": "$2b$12$QtCrCRIriM3nVPtKBl9U6.4noY3oStkgTFWWOc3xMKfv..CtUDRx6",
+    "role_name": "Collector Simple",
+    "role_id": "0f323d07-74cf-4a5e-ad6d-1a658a402bc8",
+    "status": "activated",
+    "timestamp": "2025-11-05T16:12:12"
+  },
+  {
+    "user_id": "dda6d7cc-c23b-4bb8-8053-4c283194b369",
+    "matricule": 3306,
+    "nom": "Fru Kingsley",
+    "email": "kingsley.fru@elecit.net",
+    "password": "password_hashed",
+    "role_name": "admin",
+    "role_id": "676f48d0-11fb-493b-8266-be3a247c4026",
+    "status": "activated",
+    "timestamp": "2025-08-11T16:03:49"
+  },
+  {
+    "user_id": "673fe6b9-e963-45ac-b580-8d0dc8b93d3f",
+    "matricule": 3307,
+    "nom": "lucrece tankoua",
+    "email": "lucrece.tankoua@elecit.net",
+    "password": "$2b$12$63z9wVPTAQHgJ1X94by8MuCbRiWoit3u9VRUxZAyN1bw0B9Sb2kfO",
+    "role_name": "admin",
+    "role_id": "676f48d0-11fb-493b-8266-be3a247c4026",
+    "status": "activated",
+    "timestamp": "2025-11-05T16:34:26"
+  },
+  {
+    "user_id": "876f48d0-11fb-493b-8266-be3a247c4096",
+    "matricule": 4470,
+    "nom": "patricia ngounou",
+    "email": "patricia.ngounou@elecit.net",
+    "password": "password_hashed",
+    "role_name": "admin",
+    "role_id": "676f48d0-11fb-493b-8266-be3a247c4026",
+    "status": "activated",
+    "timestamp": "2025-08-11T15:55:45"
+  },
+  {
+    "user_id": "20bea754-831d-477c-bedb-e4dd59e37c8d",
+    "matricule": 7586,
+    "nom": "Cabrel Noubi Verant",
+    "email": "cabrel.noubi@elecit.net",
+    "password": "$2b$12$zU6S/okLnG3Yhtw091iZMu25KrjW3vTdo22RzZ7yUIYDTeqWkqRJm",
+    "role_name": "admin",
+    "role_id": "676f48d0-11fb-493b-8266-be3a247c4026",
+    "status": "activated",
+    "timestamp": "2025-11-06T16:28:03"
+  }
+]
+Response headers
+ content-length: 1536 
+ content-type: application/json 
+ date: Fri,07 Nov 2025 07:45:33 GMT 
+ server: uvicorn 
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+[
+  {
+    "user_id": "string",
+    "matricule": 0,
+    "nom": "string",
+    "email": "user@example.com",
+    "password": "string",
+    "role_name": "string",
+    "role_id": "string",
+    "status": "string",
+    "timestamp": "2025-11-07T14:02:48.957Z"
+  }
+]
+No links
+
+GET
+/users/{user_id}
+Get User
+
+pour avoir les informations completes d'un utilisateur du systeme, il faut fournir les informations suivantes.
+
+- **user_id**: le matricule de l'utilisateur (obligatoire)
+Returns:
+
+- **user_id** : l'identifiant de l'utilisateur
+- **matricule**: le matricule de l'utilisateur
+- **email** : l'email de l'utilisateur
+- **password** : le mot de passe de l'utilisateur qui est crypte
+- **role_name** : le nom du role attribue a l'utilisateur
+- **role_id** : l'identifiant du role attribue a l'utilisateur
+- **status** : le status de l'utilisateur a sa creation qui est "activated"
+- **timestamp** : la date de creation du nouvel utilisateur
+Parameters
+Cancel
+Name	Description
+user_id *
+string
+(path)
+e9d19686-78f7-406c-a14d-7e11ba8ca3
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'GET' \
+  'http://192.168.10.96:8000/users/e9d19686-78f7-406c-a14d-7e11ba8ca3' \
+  -H 'accept: application/json'
+Request URL
+http://192.168.10.96:8000/users/e9d19686-78f7-406c-a14d-7e11ba8ca3
+Server response
+Code	Details
+500
+Undocumented
+Error: Internal Server Error
+
+Response body
+Download
+{
+  "detail": "pas d'utilisateur avec l'identifiant e9d19686-78f7-406c-a14d-7e11ba8ca3"
+}
+Response headers
+ content-length: 84 
+ content-type: application/json 
+ date: Fri,07 Nov 2025 07:46:04 GMT 
+ server: uvicorn 
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "user_id": "string",
+  "matricule": 0,
+  "nom": "string",
+  "email": "user@example.com",
+  "password": "string",
+  "role_name": "string",
+  "role_id": "string",
+  "status": "string",
+  "timestamp": "2025-11-07T14:02:48.908Z"
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+POST
+/users/create
+Create User
+
+
+pour se creer un nouvel utilisteur dans le systeme, il faut fournir les informations suivantes.
+
+- **matricule**: le matricule de l'utilisateur (obligatoire)
+- **nom**: le nom de l'utilisateur a creer
+- **email**: l'addresse email de l'utilisateur
+- **password**: le mot de passe de l'utilisateur
+- **role_id**: le role a attribuer a un utilisateur
+Returns:
+
+- **user_id** : l'identifiant de l'utilisateur nouvellement cree
+- **matricule**: le matricule de l'utilisateur
+- **email** : l'email de l'utilisateur
+- **password** : le mot de passe de l'utilisateur qui est crypte
+- **role_name** : le nom du role attribue a l'utilisateur
+- **role_id** : l'identifiant du role attribue a l'utilisateur
+- **status** : le status de l'utilisateur a sa creation qui est "activated"
+- **timestamp** : la date de creation du nouvel utilisateur
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+  "matricule": 0,
+  "nom": "string",
+  "email": "user@example.com",
+  "password": "string",
+  "role_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "user_id": "string",
+  "matricule": 0,
+  "nom": "string",
+  "email": "user@example.com",
+  "password": "string",
+  "role_name": "string",
+  "role_id": "string",
+  "status": "string",
+  "timestamp": "2025-11-07T14:02:48.911Z"
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+PUT
+/users/update
+Update User
+
+
+pour se mettre a jour les informations basiques dans le systeme, il faut fournir les informations suivantes.
+
+NB: parmi les champs optionnels, seuls ceux fournis a l'api seront mis a jour
+
+- **user_id**: le matricule de l'utilisateur (obligatoire)
+- **matricule**: le matricule de l'utilisateur (optionnel)
+- **nom**: le nom de l'utilisateur a creer (optionnel)
+- **email**: l'addresse email de l'utilisateur (optionnel)
+- **password**: le mot de passe de l'utilisateur (optionnel)
+Returns: - user_id : l'identifiant de l'utilisateur nouvellement cree - matricule: le matricule de l'utilisateur - email : l'email de l'utilisateur - password : le mot de passe de l'utilisateur qui est crypte - role_name : le nom du role attribue a l'utilisateur - role_id : l'identifiant du role attribue a l'utilisateur - status : le status de l'utilisateur a sa creation qui est "activated" - timestamp : la date de creation du nouvel utilisateur
+
+Parameters
+Cancel
+No parameters
+
+Request body
+
+application/json
+Edit Value
+Schema
+{
+  "user_id": "string",
+  "nom": "string",
+  "matricule": 0,
+  "email": "user@example.com",
+  "password": "string"
+}
+Execute
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "user_id": "string",
+  "matricule": 0,
+  "nom": "string",
+  "email": "user@example.com",
+  "password": "string",
+  "role_name": "string",
+  "role_id": "string",
+  "status": "string",
+  "timestamp": "2025-11-07T14:02:48.914Z"
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links
+
+DELETE
+/users/delete/{user_id}
+Deactivate User
+
+
+pour supprimer utilisateur dans le systeme, il faut fournir les informations suivantes.
+
+- **user_id**: le matricule de l'utilisateur (obligatoire)
+Returns: - 204 No-content
+
+Parameters
+Try it out
+Name	Description
+user_id *
+string
+(path)
+user_id
+Responses
+Code	Description	Links
+204	
+Successful Response
+
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+No links

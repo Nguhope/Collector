@@ -16,11 +16,12 @@ export const rolesApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["Role"],
         }),
+
         updateRole: builder.mutation({
-            query: (roleId)  => ({
+            query: (role)  => ({
                 url: "roles/update",
                 method: "PUT",
-                body: roleId,
+                body: role,
             }),
             invalidatesTags: ['Role'],
 
