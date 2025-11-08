@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import EquipementsList from '../components/EquipementsList';
+import CollectesList from '../components/CollectesList';
 import { 
   FaPlay, 
   FaStop, 
@@ -81,7 +81,7 @@ const mockEquipments = [
 ];
 
 // Composant principal de collecte
-const EquipementPage = () => {
+const CollectePage = () => {
   const [selectedSite, setSelectedSite] = useState('all');
   const [selectedEquipmentType, setSelectedEquipmentType] = useState('all');
   const [isCollecting, setIsCollecting] = useState(false);
@@ -315,7 +315,7 @@ const EquipementPage = () => {
         </AnimatePresence>
       </motion.div>
 
-<EquipementsList
+<CollectesList
   equipmentData={collectedData}
   isLoading={isCollecting}
   progress={progress}
@@ -332,4 +332,4 @@ const EquipementPage = () => {
   );
 };
 
-export default EquipementPage
+export default CollectePage

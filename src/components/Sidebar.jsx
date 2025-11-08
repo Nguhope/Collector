@@ -25,7 +25,9 @@ import {
   FaSignOutAlt,
   FaUserAlt,
   FaUsers,
-  FaUserCheck
+  FaUserCheck,
+  FaHistory,
+  FaListAlt
 } from 'react-icons/fa';
 
 
@@ -36,10 +38,11 @@ const Sidebar = ({ isOpen, toggleSidebar, activeItem, setActiveItem }) => {
     { icon: <FaMapMarkerAlt size={20} />, title: 'Sites', id: 'sites' },
     { icon: <FaClock size={20} />, title: 'Planification', id: 'planification' },
     { icon: <FaDatabase size={20} />, title: 'Collecte', id: 'collecte' },
-       { icon: <FaUserCheck size={20} />, title: 'Gestion des clients', id: 'client' },
+    { icon: <FaListAlt size={20} />, title: 'Historique Collecte', id: 'history' },
+    { icon: <FaUserCheck size={20} />, title: 'Gestion des clients', id: 'client' },
     { icon: <FaUsers size={20} />, title: 'Utilisateur systéme', id: 'gestion' },
   
-      { icon: <FaShieldAlt size={20} />, title: 'Paramètres', id: 'parametres' },
+    { icon: <FaShieldAlt size={20} />, title: 'Paramètres', id: 'parametres' },
   
   ];
 const handleLogout = () => {

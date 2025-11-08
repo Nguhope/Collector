@@ -2,7 +2,7 @@
 import Sidebar from '../components/Sidebar';
 import NavBar from '../components/Navbar';
 import HomePage from './HomePage';
-import EquipementPage from './EquipementPage';
+import CollectePage from './CollectePage';
 import PlanificationPage from './PlanificationPage';
 import  {useState, useEffect} from 'react'
 import Users from './Users';
@@ -52,7 +52,7 @@ useEffect(() => {
         
         <main className="flex-1 overflow-auto">
           {activeItem === 'accueil' && <HomePage />}
-          {activeItem === 'collecte' && <EquipementPage />}
+          {activeItem === 'collecte' && <CollectePage />}
           {activeItem === 'planification' && <PlanificationPage />}
           {activeItem === 'gestion' && <Users />}
           {activeItem === 'client' && <ClientsPage />}
