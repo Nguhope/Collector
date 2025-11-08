@@ -14,7 +14,7 @@ const store = configureStore({
         getDefaultMiddleware().concat(authApi.middleware, collectorApi.middleware)
 
 })
-
+d
 export default store///////
 
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
