@@ -147,6 +147,8 @@ const CollectePage = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [filterOpen, setFilterOpen] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [selectedResourceName, setSelectedResourceName] = useState('all');
+
 
   // Simulation de collecte
   const startCollection = () => {
@@ -381,6 +383,22 @@ const CollectePage = () => {
                     ))}
                   </select>
                 </div>
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Ressources Name
+  </label>
+  <select
+    value={selectedResourceName}
+    onChange={(e) => setSelectedResourceName(e.target.value)}
+    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+    disabled={isCollecting}
+  >
+    <option value="all">Toutes les ressources</option>
+    {RessourcesName.map(r => (
+      <option key={r.id} value={r.name}>{r.name}</option>
+    ))}
+  </select>
+</div>
 
                  <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -399,36 +417,35 @@ const CollectePage = () => {
                 </div>
               </div>
 
-              <div className="px-6 pb-6 grid grid-cols-1 md:grid-cols-2 gap-2">
-                <div>
-                      {!isCollecting ? (
-                  <button
-                    onClick={startCollection}
-                    className="flex-1 bg-gradient-to-r from-green-600 to-cyan-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-700 hover:to-cyan-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-                  >
-                    <FaPlay /> Démarrer la collecte
-                  </button>
-                  
-                ) : (
-                  <button
-                    onClick={stopCollection}
-                    className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-lg font-medium hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-                  >
-                    <FaStop /> Arrêter la collecte
-                  </button>
-                )}
-                </div>
+            <div className="px-6 pb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div className="w-full">
+    {!isCollecting ? (
+      <button
+        onClick={startCollection}
+        className="w-full bg-gradient-to-r from-green-600 to-cyan-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-700 hover:to-cyan-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+      >
+        <FaPlay /> Démarrer la collecte
+      </button>
+    ) : (
+      <button
+        onClick={stopCollection}
+        className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-lg font-medium hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+      >
+        <FaStop /> Arrêter la collecte
+      </button>
+    )}
+  </div>
 
-                <div>
-                  <button
-                    onClick={startCollection}
-                    className="flex-1 bg-gradient-to-r from-amber-400 to-yellow-600 text-white px-6 py-3 rounded-lg font-medium hover:from-amber-500 hover:to-yellow-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-                  >
-                    <FaSignal /> Démarrer un Ping
-                  </button>
-                </div>
-             
-              </div>
+  <div className="w-full">
+    <button
+      onClick={startCollection}
+      className="w-full bg-gradient-to-r from-amber-400 to-yellow-600 text-white px-6 py-3 rounded-lg font-medium hover:from-amber-500 hover:to-yellow-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+    >
+      <FaSignal /> Démarrer un Ping
+    </button>
+  </div>
+</div>
+
             </motion.div>
           )}
         </AnimatePresence>
