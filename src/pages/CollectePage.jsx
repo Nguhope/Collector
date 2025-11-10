@@ -19,7 +19,10 @@ import {
   FaMapMarkerAlt,
   FaClock,
   FaWifi,
-  FaPlug
+  FaPlug,
+  FaConnectdevelop,
+  FaDirections,
+  FaSignal
 } from 'react-icons/fa';
 // Types d'équipements avec icônes
 const equipmentTypes = [
@@ -36,6 +39,51 @@ const mockSites = [
   { id: 2, name: 'Site Secondaire - Douala' },
   { id: 3, name: 'Datacenter - Kribi' },
 ];
+
+const mockClients = [
+        {
+          id: "1",
+          name: "CAMTEL",
+          code: 101,
+          sites: 5,
+          equipements: 45,
+          status: "actif",
+          timestamp: "2025-01-15T10:30:00Z"
+        },
+        {
+          id: "2",
+          name: "MTN Cameroon",
+          code: 102,
+          sites: 8,
+          equipements: 72,
+          status: "actif",
+          timestamp: "2025-02-20T14:15:00Z"
+        },
+        {
+          id: "3",
+          name: "Orange Cameroun",
+          code: 103,
+          sites: 6,
+          equipements: 58,
+          status: "actif",
+          timestamp: "2025-03-10T09:45:00Z"
+        },
+        {
+          id: "4",
+          name: "ENEO",
+          code: 104,
+          sites: 12,
+          equipements: 95,
+          status: "actif",
+          timestamp: "2025-04-05T11:20:00Z"
+        }
+      ];
+
+      const marquesTypes = [{id:'all', name : 'toutes les marques', icon: <FaEye />, color: 'gray' },
+          {id:'all', name : ' marque &', icon: <FaEye />, color: 'gray' },
+          {id:'marque 1', name : ' marque &', icon: <FaEye />, color: 'gray' },
+          {id:'marque 2', name : ' marque &', icon: <FaEye />, color: 'gray' },
+        ]
 
 const mockEquipments = [
   { 
@@ -165,7 +213,7 @@ const CollectePage = () => {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg"
+          className=" bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg"
         >
           <div className="flex items-center justify-between">
             <div>
@@ -180,11 +228,11 @@ const CollectePage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg"
+          className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg"
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm opacity-90">En ligne</p>
+              <p className="text-sm opacity-90">Actif</p>
               <p className="text-3xl font-bold mt-1">
                 {mockEquipments.filter(e => e.status === 'online').length}
               </p>
@@ -258,10 +306,42 @@ const CollectePage = () => {
               exit={{ height: 0, opacity: 0 }}
               className="border-t border-gray-100"
             >
-              <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-6 grid grid-cols-1 md:grid-cols-5 gap-5">
+                  <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                     Ville
+                  </label>
+                  <select
+                    value={selectedSite}
+                    onChange={(e) => setSelectedSite(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                    disabled={isCollecting}
+                  >
+                    <option value="all">Tous les villes</option>
+                    {mockSites.map(site => (
+                      <option key={site.id} value={site.name}>{site.name}</option>
+                    ))}
+                  </select>
+                </div>
+                 <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    client
+                  </label>
+                  <select
+                    value={selectedSite}
+                    onChange={(e) => setSelectedSite(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                    disabled={isCollecting}
+                  >
+                    <option value="all">Tous les clients</option>
+                    {mockClients.map(site => (
+                      <option key={site.id} value={site.name}>{site.name}</option>
+                    ))}
+                  </select>
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Sélectionner un site
+                     Site
                   </label>
                   <select
                     value={selectedSite}
@@ -291,16 +371,34 @@ const CollectePage = () => {
                     ))}
                   </select>
                 </div>
+
+                 <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Type de marque
+                  </label>
+                  <select
+                    value={selectedEquipmentType}
+                    onChange={(e) => setSelectedEquipmentType(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                    disabled={isCollecting}
+                  >
+                    {marquesTypes.map(type => (
+                      <option key={type.id} value={type.id}>{type.name}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
-              <div className="px-6 pb-6 flex gap-3">
-                {!isCollecting ? (
+              <div className="px-6 pb-6 grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div>
+                      {!isCollecting ? (
                   <button
                     onClick={startCollection}
                     className="flex-1 bg-gradient-to-r from-green-600 to-cyan-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-700 hover:to-cyan-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                   >
                     <FaPlay /> Démarrer la collecte
                   </button>
+                  
                 ) : (
                   <button
                     onClick={stopCollection}
@@ -309,6 +407,17 @@ const CollectePage = () => {
                     <FaStop /> Arrêter la collecte
                   </button>
                 )}
+                </div>
+
+                <div>
+                  <button
+                    onClick={startCollection}
+                    className="flex-1 bg-gradient-to-r from-amber-400 to-yellow-600 text-white px-6 py-3 rounded-lg font-medium hover:from-amber-500 hover:to-yellow-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                  >
+                    <FaSignal /> Démarrer un Ping
+                  </button>
+                </div>
+             
               </div>
             </motion.div>
           )}

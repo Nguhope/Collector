@@ -55,6 +55,12 @@ const PlanificationPage = () => {
     { id: 'fire', name: 'Détecteurs incendie', icon: <FaFire />, color: 'red' },
     { id: 'security', name: 'Systèmes de sécurité', icon: <FaShieldAlt />, color: 'blue' },
   ];
+
+  const marquesTypes = [{id:'all', name : 'toutes les marques', icon: <FaEye />, color: 'gray' },
+    {id:'all', name : ' marque &', icon: <FaEye />, color: 'gray' },
+    {id:'marque 1', name : ' marque &', icon: <FaEye />, color: 'gray' },
+    {id:'marque 2', name : ' marque &', icon: <FaEye />, color: 'gray' },
+  ]
   
   // Données mockées pour la démonstration
   const mockSites = [
@@ -112,6 +118,7 @@ const PlanificationPage = () => {
     name: '',
     site: 'all',
     equipmentType: 'all',
+    marqueType: 'all',
     startTime: '',
     duration: 30,
     frequency: 'daily',
@@ -327,7 +334,7 @@ const PlanificationPage = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Site *
@@ -360,7 +367,25 @@ const PlanificationPage = () => {
                       ))}
                     </select>
                   </div>
+
+                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Type de marque *
+                    </label>
+                    <select
+                      required
+                      value={formData.marqueType}
+                      onChange={(e) => setFormData({ ...formData, marqueType: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    >
+                      {marquesTypes.map(type => (
+                        <option key={type.id} value={type.id}>{type.name}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
+
+                
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
