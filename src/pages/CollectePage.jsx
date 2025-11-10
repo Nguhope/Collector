@@ -79,12 +79,22 @@ const mockClients = [
         }
       ];
 
-      const marquesTypes = [{id:'all', name : 'toutes les marques', icon: <FaEye />, color: 'gray' },
+const marquesTypes = [{id:'all', name : 'toutes les marques', icon: <FaEye />, color: 'gray' },
           {id:'all', name : ' marque &', icon: <FaEye />, color: 'gray' },
           {id:'marque 1', name : ' marque &', icon: <FaEye />, color: 'gray' },
           {id:'marque 2', name : ' marque &', icon: <FaEye />, color: 'gray' },
         ]
+const RessourcesName = [
+  {id: '1', name:'groupes_electrognes'},
+  {id: '2', name:'energies'},
+  {id: '3', name:'incendies'},
+  {id: '4', name:'sat_client_and_pretreat'},
+  {id: '5', name:'alert_wiser_and_pretreat'},
+  {id: '6', name:'ups_data_logs'},
+  {id: '7', name:'ups_data_event'},
+  {id: '8', name:'ping'},
 
+]
 const mockEquipments = [
   { 
     id: 1, 
