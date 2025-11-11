@@ -5,9 +5,10 @@ import HomePage from './HomePage';
 import CollectePage from './CollectePage';
 import PlanificationPage from './PlanificationPage';
 import  {useState, useEffect} from 'react'
-import Users from './Users';
+import UsersPage from './UsersPage';
 import ClientsPage from './ClientsPage';
 import HistoryCollectePage from './HistoryCollectePage';
+import SecurityPage from './SecurityPage';
 const DashboardPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeItem, setActiveItem] = useState('collecte');
@@ -55,9 +56,10 @@ useEffect(() => {
           {activeItem === 'accueil' && <HomePage />}
           {activeItem === 'collecte' && <CollectePage />}
           {activeItem === 'planification' && <PlanificationPage />}
-          {activeItem === 'gestion' && <Users />}
+          {activeItem === 'gestion' && <UsersPage />}
           {activeItem === 'client' && <ClientsPage />}
           {activeItem === 'history' && <HistoryCollectePage />}
+          {activeItem === 'securite' && < SecurityPage />}
         </main>
       </div>
     </div>
