@@ -90,6 +90,42 @@ const ClientsPage = () => {
           status: "actif",
           timestamp: "2025-04-05T11:20:00Z",
         },
+        {
+          client_id: "5",
+          nom: "CAMTEL",
+          code: 101,
+          sites: 5,
+          equipements: 45,
+          status: "actif",
+          timestamp: "2025-01-15T10:30:00Z",
+        },
+        {
+          client_id: "6",
+          nom: "MTN Cameroon",
+          code: 102,
+          sites: 8,
+          equipements: 72,
+          status: "actif",
+          timestamp: "2025-02-20T14:15:00Z",
+        },
+        {
+          client_id: "7",
+          nom: "Orange Cameroun",
+          code: 103,
+          sites: 6,
+          equipements: 58,
+          status: "inactif",
+          timestamp: "2025-03-10T09:45:00Z",
+        },
+        {
+          client_id: "8",
+          nom: "ENEO",
+          code: 104,
+          sites: 12,
+          equipements: 95,
+          status: "actif",
+          timestamp: "2025-04-05T11:20:00Z",
+        },
       ];
       setClients(mockClients);
       setLoading(false);
