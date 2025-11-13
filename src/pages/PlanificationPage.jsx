@@ -56,6 +56,12 @@ const PlanificationPage = () => {
     { id: 'fire', name: 'Détecteurs incendie', icon: <FaFire />, color: 'red' },
     { id: 'security', name: 'Systèmes de sécurité', icon: <FaShieldAlt />, color: 'blue' },
   ];
+
+  const marquesTypes = [{id:'all', name : 'toutes les marques', icon: <FaEye />, color: 'gray' },
+    {id:'all', name : ' marque &', icon: <FaEye />, color: 'gray' },
+    {id:'marque 1', name : ' marque &', icon: <FaEye />, color: 'gray' },
+    {id:'marque 2', name : ' marque &', icon: <FaEye />, color: 'gray' },
+  ]
   
   // Données mockées pour la démonstration
   const mockSites = [
@@ -63,7 +69,44 @@ const PlanificationPage = () => {
     { id: 2, name: 'Site Secondaire - Douala' },
     { id: 3, name: 'Datacenter - Kribi' },
   ];
-  
+   const mockClients = [
+        {
+          client_id: "1",
+          nom: "CAMTEL",
+          code: 101,
+          sites: 5,
+          equipements: 45,
+          status: "actif",
+          timestamp: "2025-01-15T10:30:00Z"
+        },
+        {
+          client_id: "2",
+          nom: "MTN Cameroon",
+          code: 102,
+          sites: 8,
+          equipements: 72,
+          status: "actif",
+          timestamp: "2025-02-20T14:15:00Z"
+        },
+        {
+          client_id: "3",
+          nom: "Orange Cameroun",
+          code: 103,
+          sites: 6,
+          equipements: 58,
+          status: "actif",
+          timestamp: "2025-03-10T09:45:00Z"
+        },
+        {
+          client_id: "4",
+          nom: "ENEO",
+          code: 104,
+          sites: 12,
+          equipements: 95,
+          status: "actif",
+          timestamp: "2025-04-05T11:20:00Z"
+        }
+      ];
   const mockEquipments = [
     { 
       id: 1, 
@@ -113,6 +156,7 @@ const PlanificationPage = () => {
     name: '',
     site: 'all',
     equipmentType: 'all',
+    marqueType: 'all',
     startTime: '',
     duration: 30,
     frequency: 'daily',
@@ -328,7 +372,24 @@ const PlanificationPage = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Client *
+                    </label>
+                    <select
+                      required
+                      value={formData.site}
+                      onChange={(e) => setFormData({ ...formData, site: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    >
+                      <option value="all">Tous les clients</option>
+                      {mockClients.map(site => (
+                        <option key={site.client_id} value={site.nom}>{site.nom}</option>
+                      ))}
+                    </select>
+                  </div>
+                 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Site *
@@ -361,7 +422,25 @@ const PlanificationPage = () => {
                       ))}
                     </select>
                   </div>
+
+                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Type de marque *
+                    </label>
+                    <select
+                      required
+                      value={formData.marqueType}
+                      onChange={(e) => setFormData({ ...formData, marqueType: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    >
+                      {marquesTypes.map(type => (
+                        <option key={type.id} value={type.id}>{type.name}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
+
+                
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>

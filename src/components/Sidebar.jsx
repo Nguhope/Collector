@@ -31,6 +31,9 @@ import {
   FaUtensils,
   FaToolbox,
 } from "react-icons/fa";
+  FaCog
+} from 'react-icons/fa';
+
 
 const Sidebar = ({ isOpen, toggleSidebar, activeItem, setActiveItem }) => {
   const navigate = useNavigate();
@@ -59,6 +62,19 @@ const Sidebar = ({ isOpen, toggleSidebar, activeItem, setActiveItem }) => {
       title: "Utilisateur systéme",
       id: "gestion",
     },
+    { icon: <FaServer size={20} />, title: 'Accueil', id: 'accueil' },
+    { icon: <FaMapMarkerAlt size={20} />, title: 'Sites', id: 'sites' },
+    { icon: <FaClock size={20} />, title: 'Planification', id: 'planification' },
+    { icon: <FaDatabase size={20} />, title: 'Collecte', id: 'collecte' },
+    { icon: <FaListAlt size={20} />, title: 'Historique Collecte', id: 'history' },
+    { icon: <FaUserCheck size={20} />, title: 'Gestion des clients', id: 'client' },
+    { icon: <FaUsers size={20} />, title: 'Utilisateur systéme', id: 'gestion' },
+     { icon: <FaShieldAlt size={20} />, title: 'Securite', id: 'securite' },
+  
+    { icon: <FaCog size={20} />, title: 'Paramètres', id: 'parametres' },
+  
+  ];
+const handleLogout = () => {
 
     { icon: <FaShieldAlt size={20} />, title: "Paramètres", id: "parametres" },
   ];
