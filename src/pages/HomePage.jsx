@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -20,8 +21,10 @@ import {
   FaWifi,
   FaNetworkWired,
   FaSave,
-  FaTimes
+  FaTimes,
+  FaUser
 } from 'react-icons/fa';
+import { FaHouse } from 'react-icons/fa6';
 
 // ==================== PAGE ACCUEIL ====================
 const HomePage = () => {
@@ -52,6 +55,7 @@ const HomePage = () => {
     { icon: <FaClock />, title: 'Planifier', color: 'from-blue-500 to-blue-600', action: 'schedule' },
     { icon: <FaMapMarkerAlt />, title: 'Ajouter site', color: 'from-purple-500 to-purple-600', action: 'addSite' },
     { icon: <FaServer />, title: 'Ajouter équipement', color: 'from-orange-500 to-orange-600', action: 'addEquipment' },
+    { icon: <FaUser/>, title: 'Ajouter client', color: 'bg-cyan-600', action: 'addEquipment' },
   ];
 
   return (
@@ -72,7 +76,7 @@ const HomePage = () => {
       </motion.div>
 
       {/* Statistiques principales */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -107,7 +111,7 @@ const HomePage = () => {
           </div>
         </motion.div>
 
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
@@ -122,9 +126,9 @@ const HomePage = () => {
               <p className="text-xs text-gray-500">En ligne</p>
             </div>
           </div>
-        </motion.div>
+        </motion.div> */} 
 
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.25 }}
@@ -139,9 +143,9 @@ const HomePage = () => {
               <p className="text-xs text-gray-500">Alertes</p>
             </div>
           </div>
-        </motion.div>
+        </motion.div> */}
 
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3 }}
@@ -156,7 +160,7 @@ const HomePage = () => {
               <p className="text-xs text-gray-500">Hors ligne</p>
             </div>
           </div>
-        </motion.div>
+        </motion.div> */}
 
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -184,7 +188,7 @@ const HomePage = () => {
         className="bg-white rounded-xl shadow-lg p-6"
       >
         <h2 className="text-lg font-bold text-gray-800 mb-4">Actions rapides</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {quickActions.map((action, index) => (
             <motion.button
               key={index}

@@ -84,7 +84,7 @@ export default function LoginPage() {
               <p className="text-blue-100 font-medium text-sm sm:text-base">
                 by ElecIT
               </p>
-              <div className="mt-3 inline-block px-3 sm:px-4 py-1 bg-white bg-opacity-20 rounded-full backdrop-blur-sm">
+              <div className="mt-3 inline-block px-3 sm:px-4 py-1 bg-transparent bg-opacity-20 rounded-full backdrop-blur-sm">
                 <p className="text-white text-xs sm:text-sm font-semibold">
                   Système de Collecte de Données
                 </p>

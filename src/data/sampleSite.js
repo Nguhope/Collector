@@ -1,0 +1,69 @@
+// src/data/dataSample.js
+
+export const sampleSites = [
+  {
+    id: 1,
+    name: "Site A",
+    address: "123 Rue principale",
+    status: "active",
+    manager: "Jean Dupont",
+    phone: "+237 6 XX XX XX XX",
+    lastUpdate: "2025-10-31 14:30",
+    equipments: [
+      { type: "Temperature Sensor", ip: "192.168.1.10", status: "active", date: "2025-10-31 14:32" },
+      { type: "Pressure Sensor", ip: "192.168.1.11", status: "inactive", date: "2025-10-31 14:40" },
+    ],
+  },
+  {
+    id: 2,
+    name: "Site B",
+    address: "456 Avenue du Commerce",
+    status: "warning",
+    manager: "Marie Kamga",
+    phone: "+237 6 XX XX XX XX",
+    lastUpdate: "2025-10-31 14:28",
+    equipments: [
+      { type: "Humidity Sensor", ip: "192.168.1.12", status: "inactive", date: "2025-10-31 14:42" },
+    ],
+  },
+];
+
+// ✅ Add equipment data here in the same file
+export const sampleEquipments = [
+  {
+    id: 1,
+    ip: "192.168.1.10",
+    site_id: 1,
+    marque: "Cisco",
+    modele: "Catalyst 2960",
+    sources: "SNMP",
+    username: "admin",
+    password: "••••••",
+    description: "Main router for Site A",
+    status: "active",
+  },
+  {
+    id: 2,
+    ip: "192.168.1.22",
+    site_id: 2,
+    marque: "Huawei",
+    modele: "S5720",
+    sources: "API",
+    username: "root",
+    password: "••••••",
+    description: "Backup switch for Site B",
+    status: "inactive",
+  },
+  {
+    id: 3,
+    ip: "192.168.1.30",
+    site_id: 1,
+    marque: "Dell",
+    modele: "PowerConnect 5524",
+    sources: "SNMP",
+    username: "network-admin",
+    password: "••••••",
+    description: "Core switch for Site A",
+    status: "active",
+  },
+];
