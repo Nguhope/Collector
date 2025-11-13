@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import AddEquipment from "../components/AddEquipment";
 import { motion, AnimatePresence } from "framer-motion";
+
 import {
   FaPlus,
   FaEdit,
@@ -71,7 +72,7 @@ const EquipmentsPage = () => {
           status: "inactive",
           lastUpdate: "2025-10-31 14:40",
         },
-         {
+        {
           id: 3,
           ip: "192.168.1.10",
           site_id: "Site A",
@@ -97,7 +98,8 @@ const EquipmentsPage = () => {
           status: "inactive",
           lastUpdate: "2025-10-31 14:40",
         },
-         {
+         
+        {
           id: 5,
           ip: "192.168.1.10",
           site_id: "Site A",

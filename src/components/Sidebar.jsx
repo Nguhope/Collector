@@ -30,9 +30,8 @@ import {
   FaListAlt,
   FaUtensils,
   FaToolbox,
+  FaCog,
 } from "react-icons/fa";
-  FaCog
-} from 'react-icons/fa';
 
 
 const Sidebar = ({ isOpen, toggleSidebar, activeItem, setActiveItem }) => {
