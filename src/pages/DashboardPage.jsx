@@ -11,7 +11,7 @@ import HistoryCollectePage from './HistoryCollectePage';
 import SecurityPage from './SecurityPage';
 const DashboardPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeItem, setActiveItem] = useState('collecte');
+  const [activeItem, setActiveItem] = useState('accueil');
 
   const getTitleForPage = (page) => {
     const titles = {
