@@ -14,8 +14,85 @@ export const sampleSites = [
       { type: "Pressure Sensor", ip: "192.168.1.11", status: "inactive", date: "2025-10-31 14:40" },
     ],
   },
-  {
+   {
     id: 2,
+    name: "Site A",
+    address: "123 Rue principale",
+    status: "active",
+    manager: "Jean Dupont",
+    phone: "+237 6 XX XX XX XX",
+    lastUpdate: "2025-10-31 14:30",
+    equipments: [
+      { type: "Temperature Sensor", ip: "192.168.1.10", status: "active", date: "2025-10-31 14:32" },
+      { type: "Pressure Sensor", ip: "192.168.1.11", status: "inactive", date: "2025-10-31 14:40" },
+    ],
+  },
+   {
+    id: 3,
+    name: "Site A",
+    address: "123 Rue principale",
+    status: "active",
+    manager: "Jean Dupont",
+    phone: "+237 6 XX XX XX XX",
+    lastUpdate: "2025-10-31 14:30",
+    equipments: [
+      { type: "Temperature Sensor", ip: "192.168.1.10", status: "active", date: "2025-10-31 14:32" },
+      { type: "Pressure Sensor", ip: "192.168.1.11", status: "inactive", date: "2025-10-31 14:40" },
+    ],
+  },
+  {
+    id: 4,
+    name: "Site B",
+    address: "456 Avenue du Commerce",
+    status: "warning",
+    manager: "Marie Kamga",
+    phone: "+237 6 XX XX XX XX",
+    lastUpdate: "2025-10-31 14:28",
+    equipments: [
+      { type: "Humidity Sensor", ip: "192.168.1.12", status: "inactive", date: "2025-10-31 14:42" },
+    ],
+  },
+   {
+    id: 5,
+    name: "Site A",
+    address: "123 Rue principale",
+    status: "active",
+    manager: "Jean Dupont",
+    phone: "+237 6 XX XX XX XX",
+    lastUpdate: "2025-10-31 14:30",
+    equipments: [
+      { type: "Temperature Sensor", ip: "192.168.1.10", status: "active", date: "2025-10-31 14:32" },
+      { type: "Pressure Sensor", ip: "192.168.1.11", status: "inactive", date: "2025-10-31 14:40" },
+    ],
+  },
+   {
+    id: 6,
+    name: "Site A",
+    address: "123 Rue principale",
+    status: "active",
+    manager: "Jean Dupont",
+    phone: "+237 6 XX XX XX XX",
+    lastUpdate: "2025-10-31 14:30",
+    equipments: [
+      { type: "Temperature Sensor", ip: "192.168.1.10", status: "active", date: "2025-10-31 14:32" },
+      { type: "Pressure Sensor", ip: "192.168.1.11", status: "inactive", date: "2025-10-31 14:40" },
+    ],
+  },
+   {
+    id: 7,
+    name: "Site A",
+    address: "123 Rue principale",
+    status: "active",
+    manager: "Jean Dupont",
+    phone: "+237 6 XX XX XX XX",
+    lastUpdate: "2025-10-31 14:30",
+    equipments: [
+      { type: "Temperature Sensor", ip: "192.168.1.10", status: "active", date: "2025-10-31 14:32" },
+      { type: "Pressure Sensor", ip: "192.168.1.11", status: "inactive", date: "2025-10-31 14:40" },
+    ],
+  },
+  {
+    id: 8,
     name: "Site B",
     address: "456 Avenue du Commerce",
     status: "warning",
@@ -66,4 +143,5 @@ export const sampleEquipments = [
     description: "Core switch for Site A",
     status: "active",
   },
+  
 ];
