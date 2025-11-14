@@ -98,7 +98,7 @@ export default function ForgotPasswordPage() {
       setLoading(false);
     }, 1000);
 
-   
+  
   };
 
   return (
