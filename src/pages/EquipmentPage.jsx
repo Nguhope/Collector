@@ -56,6 +56,7 @@ const EquipmentsPage = () => {
           password: "••••••",
           description: "Capteur principal",
           modele: "XRT-200",
+          port: "8080",
           status: "active",
           lastUpdate: "2025-10-31 14:32",
         },
@@ -69,6 +70,7 @@ const EquipmentsPage = () => {
           password: "••••••",
           description: "Capteur secondaire",
           modele: "HP-900",
+          port: "9090",
           status: "inactive",
           lastUpdate: "2025-10-31 14:40",
         },
@@ -82,6 +84,7 @@ const EquipmentsPage = () => {
           password: "••••••",
           description: "Capteur principal",
           modele: "XRT-200",
+          port: "8080",
           status: "active",
           lastUpdate: "2025-10-31 14:32",
         },
@@ -95,10 +98,11 @@ const EquipmentsPage = () => {
           password: "••••••",
           description: "Capteur secondaire",
           modele: "HP-900",
+          port: "9090",
           status: "inactive",
           lastUpdate: "2025-10-31 14:40",
         },
-         
+
         {
           id: 5,
           ip: "192.168.1.10",
@@ -109,6 +113,7 @@ const EquipmentsPage = () => {
           password: "••••••",
           description: "Capteur principal",
           modele: "XRT-200",
+          port: "8080",
           status: "active",
           lastUpdate: "2025-10-31 14:32",
         },
@@ -122,6 +127,7 @@ const EquipmentsPage = () => {
           password: "••••••",
           description: "Capteur secondaire",
           modele: "HP-900",
+          port: "9090",
           status: "inactive",
           lastUpdate: "2025-10-31 14:40",
         },
@@ -282,7 +288,7 @@ const EquipmentsPage = () => {
         transition={{ delay: 0.4 }}
         className="bg-white rounded-xl shadow-lg overflow-hidden"
       >
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 border-b border-gray-100">
+        <div className="bg-gradient-to-r from-green-600 to-cyan-600 p-6 border-b border-gray-100">
           <h2 className="text-lg font-bold text-gray-800">
             Liste des Équipements
           </h2>
@@ -295,21 +301,36 @@ const EquipmentsPage = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full table-fixed">
               <thead className="bg-gray-50">
                 <tr>
-                  {["IP", "Marque", "Modèle", "Site", "Statut", "Actions"].map(
-                    (col) => (
-                      <th
-                        key={col}
-                        className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase"
-                      >
-                        {col}
-                      </th>
-                    )
-                  )}
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                    IP
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                    Marque
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                    Modèle
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                    Port
+                  </th>
+                  {/* SITE - header centered to match cells */}
+                  <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                    Site
+                  </th>
+                  {/* STATUT - header centered to match badge cell */}
+                  <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                    Statut
+                  </th>
+                  {/* ACTIONS - header centered to match action buttons */}
+                  <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                    Actions
+                  </th>
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-gray-200">
                 <AnimatePresence mode="wait">
                   {currentEquipments.length === 0 ? (
@@ -320,7 +341,7 @@ const EquipmentsPage = () => {
                       exit={{ opacity: 0 }}
                     >
                       <td
-                        colSpan="6"
+                        colSpan="7"
                         className="text-center py-6 text-gray-500 italic"
                       >
                         Aucun équipement trouvé.
@@ -336,10 +357,15 @@ const EquipmentsPage = () => {
                         transition={{ duration: 0.2 }}
                         className="hover:bg-gray-50 transition"
                       >
-                        <td className="px-6 py-4">{eq.ip}</td>
-                        <td className="px-6 py-4">{eq.marque}</td>
-                        <td className="px-6 py-4">{eq.modele}</td>
+                        <td className="px-6 py-4 text-left">{eq.ip}</td>
+                        <td className="px-6 py-4 text-left">{eq.marque}</td>
+                        <td className="px-6 py-4 text-left">{eq.modele}</td>
+                        <td className="px-6 py-4 text-left">{eq.port}</td>
+
+                        {/* SITE cell centered */}
                         <td className="px-6 py-4 text-center">{eq.site_id}</td>
+
+                        {/* STATUT cell centered with badge */}
                         <td className="px-6 py-4 text-center">
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -351,36 +377,40 @@ const EquipmentsPage = () => {
                             {eq.status}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-center flex justify-center gap-2">
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => handleOpenModal("view", eq)}
-                            className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
-                            title="Voir les détails"
-                          >
-                            <FaEye />
-                          </motion.button>
 
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => handleOpenModal("edit", eq)}
-                            className="p-2 bg-yellow-100 text-yellow-600 rounded-lg hover:bg-yellow-200 transition-colors"
-                            title="Modifier"
-                          >
-                            <FaEdit />
-                          </motion.button>
+                        {/* ACTIONS centered to align with header */}
+                        <td className="px-6 py-4 text-center">
+                          <div className="flex items-center justify-center gap-2">
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleOpenModal("view", eq)}
+                              className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
+                              title="Voir les détails"
+                            >
+                              <FaEye />
+                            </motion.button>
 
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => handleDeleteRequest(eq.id)}
-                            className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
-                            title="Supprimer"
-                          >
-                            <FaTrash />
-                          </motion.button>
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleOpenModal("edit", eq)}
+                              className="p-2 bg-yellow-100 text-yellow-600 rounded-lg hover:bg-yellow-200 transition-colors"
+                              title="Modifier"
+                            >
+                              <FaEdit />
+                            </motion.button>
+
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleDeleteRequest(eq.id)}
+                              className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                              title="Supprimer"
+                            >
+                              <FaTrash />
+                            </motion.button>
+                          </div>
                         </td>
                       </motion.tr>
                     ))
@@ -517,4 +547,3 @@ const EquipmentsPage = () => {
 };
 
 export default EquipmentsPage;
-

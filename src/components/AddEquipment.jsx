@@ -13,6 +13,7 @@ import {
   FaKey,
   FaInfoCircle,
   FaLink,
+  FaFolderOpen,
 } from "react-icons/fa";
 
 const AddEquipment = ({
@@ -32,6 +33,17 @@ const AddEquipment = ({
     { id: "3", name: "Site C" },
   ];
 
+  const communicationTypes = [
+    "Ethernet (RJ45)",
+    "RS232",
+    "RS485",
+    "CAN Bus",
+    "Fibre Optique",
+    "WiFi",
+    "GSM / 3G / 4G / 5G",
+    "LoRaWAN",
+  ];
+
   const title =
     modalMode === "add"
       ? "Nouvel Équipement"
@@ -48,6 +60,8 @@ const AddEquipment = ({
     password: <FaKey className="text-rose-500" />,
     modele: <FaMicrochip className="text-purple-500" />,
     description: <FaInfoCircle className="text-gray-500" />,
+    download_folder: <FaFolderOpen className="text-orange-500" />,
+    carte_de_communication: <FaMicrochip className="text-teal-500" />,
   };
 
   const fields = [
@@ -55,17 +69,18 @@ const AddEquipment = ({
     { label: "Site associé", key: "site_id", type: "select" },
     { label: "Marque", key: "marque", placeholder: "Marque" },
     { label: "Sources", key: "sources", placeholder: "Sources" },
+    { label: "Port", key: "port", placeholder: "Port" },
+    { label: "Destination", key: "destination", placeholder: "Destination" },
+
+    // UPDATED FIELD
     {
-      label: "Nom d'utilisateur",
-      key: "username",
-      placeholder: "Nom d'utilisateur",
+      label: "Carte de communication",
+      key: "carte_de_communication",
+      type: "select-communication",
     },
-    {
-      label: "Mot de passe",
-      key: "password",
-      placeholder: "Mot de passe",
-      type: "password",
-    },
+
+    { label: "Nom d'utilisateur", key: "username", placeholder: "Nom d'utilisateur" },
+    { label: "Mot de passe", key: "password", placeholder: "Mot de passe", type: "password" },
     { label: "Modèle", key: "modele", placeholder: "Modèle" },
   ];
 
@@ -103,7 +118,7 @@ const AddEquipment = ({
             {/* BODY */}
             <div className="p-6">
               {isView ? (
-                // VIEW MODE DESIGN
+                /* VIEW MODE */
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {fields.map((field) => (
                     <div
@@ -122,7 +137,20 @@ const AddEquipment = ({
                     </div>
                   ))}
 
-                  {/* Description full width */}
+                  {/* DOWNLOAD FOLDER VIEW */}
+                  <div className="flex items-start gap-3 bg-gradient-to-br from-gray-50 to-white p-4 rounded-xl border">
+                    <div className="mt-1">{fieldIcons.download_folder}</div>
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                        Download Folder
+                      </p>
+                      <p className="font-semibold text-gray-800 mt-1">
+                        {formData.download_folder || "—"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* DESCRIPTION */}
                   <div className="md:col-span-2 bg-gradient-to-br from-gray-50 to-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
                     <div className="flex items-start gap-3">
                       <div className="mt-1">{fieldIcons.description}</div>
@@ -138,11 +166,8 @@ const AddEquipment = ({
                   </div>
                 </div>
               ) : (
-                // FORM MODE DESIGN (add/edit)
-                <form
-                  onSubmit={handleSubmit}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-6"
-                >
+                /* FORM MODE */
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {fields.map((field) => (
                     <div key={field.key}>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -153,10 +178,7 @@ const AddEquipment = ({
                         <select
                           value={formData[field.key]}
                           onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              [field.key]: e.target.value,
-                            })
+                            setFormData({ ...formData, [field.key]: e.target.value })
                           }
                           required
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
@@ -168,15 +190,28 @@ const AddEquipment = ({
                             </option>
                           ))}
                         </select>
+                      ) : field.type === "select-communication" ? (
+                        <select
+                          value={formData[field.key]}
+                          onChange={(e) =>
+                            setFormData({ ...formData, [field.key]: e.target.value })
+                          }
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none bg-white"
+                        >
+                          <option value="">-- Sélectionner un type --</option>
+                          {communicationTypes.map((type) => (
+                            <option key={type} value={type}>
+                              {type}
+                            </option>
+                          ))}
+                        </select>
                       ) : (
                         <input
                           type={field.type || "text"}
                           value={formData[field.key]}
                           onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              [field.key]: e.target.value,
-                            })
+                            setFormData({ ...formData, [field.key]: e.target.value })
                           }
                           placeholder={field.placeholder}
                           required
@@ -186,7 +221,49 @@ const AddEquipment = ({
                     </div>
                   ))}
 
-                  {/* Description full width */}
+                  {/* DOWNLOAD FOLDER FIELD */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Download Folder *
+                    </label>
+
+                    <input
+                      type="file"
+                      id="folderPicker"
+                      className="hidden"
+                      webkitdirectory="true"
+                      directory=""
+                      onChange={(e) => {
+                        const files = e.target.files;
+                        if (files.length > 0) {
+                          const fullPath = files[0].webkitRelativePath;
+                          const folderName = fullPath.split("/")[0];
+
+                          setFormData((prev) => ({
+                            ...prev,
+                            download_folder: folderName,
+                          }));
+                        }
+                      }}
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => document.getElementById("folderPicker").click()}
+                      className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+                    >
+                      <FaFolderOpen />
+                      Choose Folder
+                    </button>
+
+                    {formData.download_folder && (
+                      <p className="mt-2 text-sm text-green-600 font-semibold">
+                        Selected: {formData.download_folder}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* DESCRIPTION */}
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Description
@@ -194,10 +271,7 @@ const AddEquipment = ({
                     <textarea
                       value={formData.description}
                       onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          description: e.target.value,
-                        })
+                        setFormData({ ...formData, description: e.target.value })
                       }
                       rows={3}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
@@ -253,3 +327,5 @@ const AddEquipment = ({
 };
 
 export default AddEquipment;
+
+
