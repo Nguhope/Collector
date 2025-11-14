@@ -43,35 +43,7 @@ export const authApi = createApi ({
                 dispatch(logout());
             }
         }),
-        getCurrentUser: builder.query({
-            query: (id) => ({
-                url: `/users/${id}`,
-            }),
-            async onQueryStarted(arg, {dispatch, queryFulfilled}) {
-                try {
-                    const {data} = await queryFulfilled;
-                    console.log('Fetched current user:', data);
-                } catch (error) {
-                    console.error('Failed to fetch current user:', error);
-                }
-            }
-        }), 
-    refreshToken: builder.mutation ({
-
-        query: () => ({
-             url: '/auth/refresh-token',
-             method: 'POST',
-        }),
-        async onQueryStarted(arg, {dispatch, queryFulfilled}) {
-            try {
-                const { data } = await queryFulfilled;
-                dispatch(setCredentials(data));
-            } catch {
-                dispatch(clearCredentials());
-            }
-        }
-    }),
-
+      
 
 
     forgetPassword: builder.mutation({
@@ -89,6 +61,11 @@ export const authApi = createApi ({
         } catch {}
       }
 
+    }),
+
+    getToken : builder.query({
+     
+      query: (token) => `/auth/password/reset/validate-token/${token}`
     }),
 
     resetPassword: builder.mutation({
@@ -113,23 +90,8 @@ export const authApi = createApi ({
     }),
 });
 
-const baseQueryWithReauth = async (args, api, extraOptions) => {
-  let result = await baseQuery(args, api, extraOptions);
 
-  if (result.error && result.error.status === 401) {
-    // Tentative de refresh token
-    try {
-      await api.dispatch(useRefreshTokenMutation().initiate());
-      // Replay requête initiale avec nouveau token
-      result = await baseQuery(args, api, extraOptions);
-    } catch {
-      // logout automatique si refresh échoue
-      api.dispatch(clearCredentials());
-    }
-  }
-  return result;
-};
 
-const {useLoginMutation, useLogoutMutation, useGetCurrentUserQuery, useForgetPasswordMutation, useResetPasswordMutation } = authApi;      
+const {useGetTokenQuery,useLoginMutation, useLogoutMutation, useForgetPasswordMutation, useResetPasswordMutation } = authApi;      
 
-export {useLoginMutation, useLogoutMutation, useGetCurrentUserQuery, useForgetPasswordMutation, useResetPasswordMutation};
+export {useGetTokenQuery,useLoginMutation, useLogoutMutation, useForgetPasswordMutation, useResetPasswordMutation};

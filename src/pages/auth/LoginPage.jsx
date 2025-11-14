@@ -2,52 +2,81 @@ import React, { useState, useEffect } from "react";
 import { Activity, Lock, Mail, Eye, EyeOff, Zap, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+// Import essentiel pour le login
+
+import { useAuthRedux } from "../../hooks/useAuthRedux"
+
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  const [matricule, setMatricule] = useState("");
-  const [password, setPassword] = useState("");
+  // Appel du hook
+  const {login, loading, error } = useAuthRedux();
+
+  const [credentials , setCredentials] = useState({matricule: '', password: ''})
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  // Inline feedback for success/error
-  const [message, setMessage] = useState({ text: "", type: "" });
 
-  // Clear messages on input change
-  useEffect(() => {
-    if (message.text) setMessage({ text: "", type: "" });
-  }, [matricule, password]);
 
-  const validateFields = () => {
-    if (!matricule.trim() || !password.trim()) {
-      setMessage({ text: "Veuillez remplir tous les champs !", type: "error" });
-      return false;
+
+
+
+
+  // const [matricule, setMatricule] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [showPassword, setShowPassword] = useState(false);
+  // const [loading, setLoading] = useState(false);
+
+  // // Inline feedback for success/error
+  // const [message, setMessage] = useState({ text: "", type: "" });
+
+  // // Clear messages on input change
+  // useEffect(() => {
+  //   if (message.text) setMessage({ text: "", type: "" });
+  // }, [matricule, password]);
+
+  // const validateFields = () => {
+  //   if (!matricule.trim() || !password.trim()) {
+  //     setMessage({ text: "Veuillez remplir tous les champs !", type: "error" });
+  //     return false;
+  //   }
+  //   return true;
+  // };
+
+
+  const handleChange = (e) => {
+        setCredentials({...credentials, [e.target.name]: e.target.value});
+
+
+
+  };
+
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const result = await login(credentials);
+    if (result) {
+      console.log("Succès login:", result);
+      navigate('/dashboard');
+    } else {
+      // Cas où login ne renvoie rien ou échoue logiquement
+      console.error("Login failed: no result");
+      // Optionnel : afficher message utilisateur
     }
-    return true;
-  };
+  } catch (error) {
+    // Gestion d’erreur pouvant venir du hook
+    console.error("Erreur login:", error);
+    // Optionnel : afficher message dans interface
+  }
+};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (loading) return;
-    if (!validateFields()) return;
 
-    setLoading(true);
-    setMessage({ text: "", type: "" });
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  }
 
-    // --------------------------
-    // Simulated login (commented out backend call)
-    // --------------------------
-    setTimeout(() => {
-      // Simulate success message
-      setMessage({ text: "Connexion réussie !", type: "success" });
 
-      // Redirect to dashboard after short delay
-      setTimeout(() => navigate("/dashboard"), 1000);
 
-      setLoading(false);
-    }, 1500);
 
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-500 via-blue-600 to-green-500 flex items-center justify-center p-4 relative overflow-hidden">
@@ -91,9 +120,14 @@ export default function LoginPage() {
               </div>
             </div>
           </div>
-
+{error && (
+    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl relative mb-6">
+        <strong className="font-bold">Erreur :</strong>
+        <span className="block sm:inline ml-2">{error}</span>
+    </div>
+)}
           {/* Form */}
-          <form onSubmit={handleSubmit} className="p-6 sm:p-8" noValidate>
+          <form onSubmit={handleSubmit} className="p-6 sm:p-8">
             <div className="text-center mb-6 sm:mb-8">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
                 Bienvenue !
@@ -103,18 +137,6 @@ export default function LoginPage() {
               </p>
             </div>
 
-            {message.text && (
-              <div
-                role="alert"
-                className={`mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg ${
-                  message.type === "error"
-                    ? "bg-red-50 border-l-4 border-red-500 text-red-700 font-medium"
-                    : "bg-green-50 border-l-4 border-green-500 text-green-700 font-medium"
-                }`}
-              >
-                <p className="text-sm sm:text-base">{message.text}</p>
-              </div>
-            )}
 
             {/* Matricule */}
             <div className="mb-4 sm:mb-6">
@@ -133,8 +155,9 @@ export default function LoginPage() {
                   type="text"
                   className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all text-gray-900 font-medium placeholder-gray-400 text-sm sm:text-base"
                   placeholder="Votre matricule"
-                  value={matricule}
-                  onChange={(e) => setMatricule(e.target.value)}
+                   name="matricule"
+                  value={credentials.matricule}
+                  onChange={handleChange}
                   disabled={loading}
                   required
                 />
@@ -158,14 +181,15 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-3 sm:py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all text-gray-900 font-medium placeholder-gray-400 text-sm sm:text-base"
                   placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={credentials.password}
+                  name="password"
+                  onChange={handleChange}
                   disabled={loading}
                   required
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword((show) => !show)}
+                  onClick={togglePasswordVisibility}
                   className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 hover:text-blue-500 transition-colors"
                   aria-label={
                     showPassword

@@ -1,7 +1,7 @@
 
 // src/hooks/useAuthRedux.js
 import { useDispatch, useSelector } from 'react-redux';
-import {useForgetPasswordMutation, useLoginMutation, useLogoutMutation, useResetPasswordMutation} from '../services/api/authApi'
+import {useForgetPasswordMutation, useGetTokenQuery, useLoginMutation, useLogoutMutation, useResetPasswordMutation} from '../services/api/authApi'
 import { setCredentials, clearCredentials, setError, setLoading } from '../features/auth/authSlice';
 
 export const useAuthRedux = () => {
@@ -13,33 +13,25 @@ export const useAuthRedux = () => {
   const [logoutApi] = useLogoutMutation();
   const [forgetPasswordApi] = useForgetPasswordMutation();
   const [resetPasswordApi] = useResetPasswordMutation();
+  // const [getTokenApi] = useGetTokenQuery();
 
-  const [refreshTokenApi] = useRefreshTokenMutation();
-
-  // Fonction de refresh token utilisée sur requête expirée
-  const refreshToken = async () => {
-    try {
-      dispatch(setLoading(true));
-      const result = await refreshTokenApi().unwrap();
-      dispatch(setLoading(false));
-      return result;
-    } catch (err) {
-      dispatch(clearCredentials());
-      dispatch(setLoading(false));
-      throw err;
-    }
-  };
-
+  // const getToken = async (credentials) => {
+  //   try {
+  //     dispatch(setLoading(true));
+  //     const result =  await getTokenApi(credentials).unwrap();
+  //   }
+  // };
+ 
 
   const login = async (credentials) => {
     try {
       dispatch(setLoading(true));
       const result = await loginApi(credentials).unwrap();
-      dispatch(setCredentials(result));
+     
       dispatch(setLoading(false));
       return result;
     } catch (err) {
-      dispatch(setError(err.data?.error || 'Erreur inconnue'));
+      dispatch(setError(err.data?.message || 'Erreur inconnue'));
       dispatch(setLoading(false));
       throw err;
     }
@@ -89,6 +81,5 @@ export const useAuthRedux = () => {
     logout,
     forgetPassword,
     resetPassword,
-    refreshToken
   };
 };

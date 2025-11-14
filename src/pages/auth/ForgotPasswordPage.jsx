@@ -65,24 +65,7 @@ export default function ForgotPasswordPage() {
       setLoading(false);
     }, 1000);
 
-    /*
-    // Backend call (commented for design)
-    try {
-      const res = await fetch("/api/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Erreur serveur");
-      setMessage({ text: data.message, type: "success" });
-      setTimeout(() => setStep(2), 1000);
-    } catch (err) {
-      setMessage({ text: err.message, type: "error" });
-    } finally {
-      setLoading(false);
-    }
-    */
+   
   };
 
   // STEP 2: Reset password (simulate)
@@ -115,24 +98,7 @@ export default function ForgotPasswordPage() {
       setLoading(false);
     }, 1000);
 
-    /*
-    // Backend call (commented for design)
-    try {
-      const res = await fetch("/api/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, password }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Erreur serveur");
-      setMessage({ text: data.message || "Mot de passe réinitialisé avec succès !", type: "success" });
-      setTimeout(() => navigate("/login"), 1000);
-    } catch (err) {
-      setMessage({ text: err.message, type: "error" });
-    } finally {
-      setLoading(false);
-    }
-    */
+   
   };
 
   return (
