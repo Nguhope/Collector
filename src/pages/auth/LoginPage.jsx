@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
 import { Activity, Lock, Mail, Eye, EyeOff, Zap, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";

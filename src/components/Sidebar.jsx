@@ -33,9 +33,13 @@ import {
   FaCog,
 } from "react-icons/fa";
 
-
+import { useLogoutMutation } from "../services/api/authApi";
 const Sidebar = ({ isOpen, toggleSidebar, activeItem, setActiveItem }) => {
   const navigate = useNavigate();
+
+  const [logout, { isLoading, isSuccess, isError, error }] = useLogoutMutation();
+
+
   const menuItems = [
     { icon: <FaServer size={20} />, title: "Accueil", id: "accueil" },
     { icon: <FaMapMarkerAlt size={20} />, title: "Sites", id: "sites" },
@@ -69,6 +73,8 @@ const Sidebar = ({ isOpen, toggleSidebar, activeItem, setActiveItem }) => {
   ];
 
   const handleLogout = () => {
+    logout();
+    console.log("Déconnexion réussie");
     navigate("/"); // Redirect to login page
   };
   return (

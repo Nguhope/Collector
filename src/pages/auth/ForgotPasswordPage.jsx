@@ -8,9 +8,13 @@ import {
   CheckCircle,
   Shield,
   ArrowLeft,
-  Frown,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  useForgetPasswordMutation,
+  useResetPasswordMutation,
+  useGetTokenQuery,
+} from "../../services/api/authApi";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -18,93 +22,109 @@ export default function ForgotPasswordPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [step, setStep] = useState(1); // 1=request token, 2=reset
+  // --------------------------
+  // RTK QUERY HOOKS
+  // --------------------------
+  const [forgetPassword, { isLoading: sendingEmail, isSuccess: emailSuccess, isError: emailError, error: emailErrObj }] =
+    useForgetPasswordMutation();
+
+  const [resetPassword, { isLoading: savingPassword, isSuccess: resetSuccess, error: resetErrObj }] =
+    useResetPasswordMutation();
+
+  // --------------------------
+  // FORM STATES
+  // --------------------------
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ text: "", type: "" }); // success/error
 
-  // Auto-detect token from URL (optional)
+  const [message, setMessage] = useState({ text: "", type: "" });
+
+  // --------------------------
+  // Detect token in URL
+  // --------------------------
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const tokenFromUrl = params.get("token");
-    if (tokenFromUrl) {
-      setToken(tokenFromUrl);
+    const t = params.get("token");
+    if (t) {
+      setToken(t);
       setStep(2);
     }
   }, [location.search]);
 
-  // Clear message when input changes
-  useEffect(() => {
-    if (message.text) setMessage({ text: "", type: "" });
-  }, [email, token, password, confirm]);
-
-  // STEP 1: Request reset token (simulate email)
-  const handleRequestToken = (e) => {
+  // --------------------------
+  // Handle sending email
+  // --------------------------
+  const handleSubmitEmail = async (e) => {
     e.preventDefault();
-    if (!email.trim()) {
-      setMessage({ text: "Veuillez entrer votre email", type: "error" });
-      return;
-    }
 
-    setLoading(true);
+    if (!email.trim())
+      return setMessage({ text: "Veuillez entrer votre email", type: "error" });
 
-    // --------------------------
-    // Simulate sending token to email
-    // --------------------------
-    setTimeout(() => {
+    try {
+      await forgetPassword({ email }).unwrap();
+
       setMessage({
         text: "Un lien de réinitialisation a été envoyé à votre email.",
         type: "success",
       });
-      setTimeout(() => setStep(2), 1000);
-      setLoading(false);
-    }, 1000);
 
-   
+      setTimeout(() => setStep(2), 1200);
+
+    } catch (err) {
+      setMessage({
+        text: err?.data?.message || "Erreur lors de l’envoi de l’email",
+        type: "error",
+      });
+    }
   };
 
-  // STEP 2: Reset password (simulate)
-  const handleResetPassword = (e) => {
+  // --------------------------
+  // Handle reset password
+  // --------------------------
+  const handleResetPassword = async (e) => {
     e.preventDefault();
+
     if (!token.trim())
-      return setMessage({
-        text: "Veuillez coller le token reçu par email",
-        type: "error",
-      });
-    if (!password.trim() || !confirm.trim())
-      return setMessage({ text: "Remplissez tous les champs", type: "error" });
+      return setMessage({ text: "Veuillez entrer ou coller votre token", type: "error" });
+
+    if (!password || !confirm)
+      return setMessage({ text: "Tous les champs sont obligatoires", type: "error" });
+
     if (password !== confirm)
-      return setMessage({
-        text: "Les mots de passe ne correspondent pas",
-        type: "error",
-      });
+      return setMessage({ text: "Les mots de passe ne correspondent pas", type: "error" });
 
-    setLoading(true);
+    try {
+      await resetPassword({
+        token,
+        new_password: password,
+        confirm_password: confirm,
+      }).unwrap();
 
-    // --------------------------
-    // Simulate password reset
-    // --------------------------
-    setTimeout(() => {
       setMessage({
-        text: "Mot de passe réinitialisé avec succès !",
+        text: "Mot de passe réinitialisé avec succès!",
         type: "success",
       });
-      setTimeout(() => navigate("/"), 1000);
-      setLoading(false);
-    }, 1000);
 
-  
+      setTimeout(() => navigate("/"), 1200);
+
+    } catch (err) {
+      setMessage({
+        text: err?.data?.message || "Erreur lors de la réinitialisation",
+        type: "error",
+      });
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-green-500 p-6">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md transition-all duration-500">
-        {/* Header */}
+        
+        {/* HEADER */}
         <div className="flex flex-col items-center mb-6 relative">
           <AnimatePresence>
             {step === 1 && (
@@ -118,7 +138,6 @@ export default function ForgotPasswordPage() {
                 className="absolute left-0 top-0 flex items-center gap-1 text-gray-600 hover:text-blue-600 transition-all"
               >
                 <ArrowLeft className="w-5 h-5" />
-                <span className="text-sm font-medium"></span>
               </motion.button>
             )}
           </AnimatePresence>
@@ -130,9 +149,7 @@ export default function ForgotPasswordPage() {
           )}
 
           <h2 className="text-2xl font-bold text-gray-800 text-center transition-all">
-            {step === 1
-              ? "Mot de passe oublié"
-              : "Réinitialisation du mot de passe"}
+            {step === 1 ? "Mot de passe oublié" : "Réinitialisation du mot de passe"}
           </h2>
 
           {message.text && (
@@ -148,12 +165,11 @@ export default function ForgotPasswordPage() {
           )}
         </div>
 
-        {/* STEP 1: Request token */}
+        {/* STEP 1 — Request token */}
         {step === 1 && (
-          <form onSubmit={handleRequestToken} className="animate-fadeIn">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Email
-            </label>
+          <form onSubmit={handleSubmitEmail} className="animate-fadeIn">
+            <label className="block text-gray-700 font-semibold mb-2">Email</label>
+
             <div className="relative mb-4">
               <KeyRound className="absolute left-3 top-3 text-gray-400" />
               <input
@@ -162,25 +178,26 @@ export default function ForgotPasswordPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-                disabled={loading}
+                disabled={sendingEmail}
               />
             </div>
+
             <button
               type="submit"
-              disabled={loading}
+              disabled={sendingEmail}
               className="w-full bg-gradient-to-r from-blue-600 to-green-500 text-white py-3 rounded-lg font-semibold hover:opacity-90 transition"
             >
-              {loading ? "Envoi en cours..." : "Envoyer le lien Token"}
+              {sendingEmail ? "Envoi en cours..." : "Envoyer le lien Token"}
             </button>
           </form>
         )}
 
-        {/* STEP 2: Reset password */}
+        {/* STEP 2 — Reset password */}
         {step === 2 && (
           <form onSubmit={handleResetPassword} className="animate-fadeIn">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Token de vérification
-            </label>
+            {/* TOKEN */}
+            <label className="block text-gray-700 font-semibold mb-2">Token de vérification</label>
+
             <div className="relative mb-4">
               <KeyRound className="absolute left-3 top-3 text-gray-400" />
               <input
@@ -189,13 +206,13 @@ export default function ForgotPasswordPage() {
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
                 className="w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-                disabled={loading}
+                disabled={savingPassword}
               />
             </div>
 
-            <label className="block text-gray-700 font-semibold mb-2">
-              Nouveau mot de passe
-            </label>
+            {/* NEW PASSWORD */}
+            <label className="block text-gray-700 font-semibold mb-2">Nouveau mot de passe</label>
+
             <div className="relative mb-4">
               <Lock className="absolute left-3 top-3 text-gray-400" />
               <input
@@ -204,7 +221,7 @@ export default function ForgotPasswordPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-10 pr-10 py-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-                disabled={loading}
+                disabled={savingPassword}
               />
               <button
                 type="button"
@@ -215,9 +232,9 @@ export default function ForgotPasswordPage() {
               </button>
             </div>
 
-            <label className="block text-gray-700 font-semibold mb-2">
-              Confirmer le mot de passe
-            </label>
+            {/* CONFIRM PASSWORD */}
+            <label className="block text-gray-700 font-semibold mb-2">Confirmer le mot de passe</label>
+
             <div className="relative mb-6">
               <Lock className="absolute left-3 top-3 text-gray-400" />
               <input
@@ -226,7 +243,7 @@ export default function ForgotPasswordPage() {
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 className="w-full pl-10 pr-10 py-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-                disabled={loading}
+                disabled={savingPassword}
               />
               <button
                 type="button"
@@ -239,12 +256,10 @@ export default function ForgotPasswordPage() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={savingPassword}
               className="w-full bg-gradient-to-r from-blue-600 to-green-500 text-white py-3 rounded-lg font-semibold hover:opacity-90 transition"
             >
-              {loading
-                ? "Réinitialisation en cours..."
-                : "Réinitialiser le mot de passe"}
+              {savingPassword ? "Réinitialisation..." : "Réinitialiser le mot de passe"}
             </button>
           </form>
         )}
