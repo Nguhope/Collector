@@ -1,8 +1,23 @@
 import { apiSlice } from "./apiSlice";
+import { createApi,fetchBaseQuery } from "@reduxjs/toolkit/query";
 
 
-export const equipementsApi = apiSlice.injectEndpoints({
-    endpoints: (builder) => ({
+
+const baseUrl = import.meta.env.VITE_API_BASE_URL 
+
+export const equipementsApi = createApi({
+  reducerPath: "equipementsApi",
+ baseQuery: fetchBaseQuery({
+        baseUrl,
+        prepareHeaders: (headers, {getState})  =>  {
+        const token = getState().auth.token;
+        if(token) headers.set("Authorization", `Bearer ${token}`);
+        headers.set('Content-Type', 'application/json');
+        headers.set('Accept', 'application/json');
+        return headers;
+    }
+    }),
+  endpoints: (builder) => ({
         listEquipements: builder.query({
             query: () => "/equipements/all",
             providesTags: ["Equipment"],
@@ -13,7 +28,7 @@ export const equipementsApi = apiSlice.injectEndpoints({
             providesTags: ["Equipment"],
         }),
        
-        registerEquipement: builder.mutation({
+        registerEquipement: builder.mutation({ 
             query: (equipement) => ({
                     url: "/equipements/register",
                     method: "POST",
@@ -25,7 +40,7 @@ export const equipementsApi = apiSlice.injectEndpoints({
         updateEquipement: builder.mutation({
             query: (equipement) => ({
                 url: "/equipements/update",
-                methode: "PUT",
+                method: "PUT",
                 body: equipement,
             }),
             invalidatesTags: ["Equipment"]

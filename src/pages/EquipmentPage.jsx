@@ -1,7 +1,14 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import AddEquipment from "../components/AddEquipment";
 import { motion, AnimatePresence } from "framer-motion";
+
+import {
+  useListEquipementsQuery,
+  useDeleteEquipementMutation,
+  useRegisterEquipementMutation,
+  useUpdateEquipementMutation,
+} from "../services/api/equipementsApi";
 
 import {
   FaPlus,
@@ -14,177 +21,110 @@ import {
 } from "react-icons/fa";
 
 const EquipmentsPage = () => {
-  const [equipments, setEquipments] = useState([]);
-  const [loading, setLoading] = useState(true);
+  /** UI STATE */
   const [showModal, setShowModal] = useState(false);
-  const [modalMode, setModalMode] = useState("add"); // add | edit | view
+  const [modalMode, setModalMode] = useState("add");
   const [selectedEquipment, setSelectedEquipment] = useState(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [countdown, setCountdown] = useState(5);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  // ✅ Pagination State
-  const [currentPage, setCurrentPage] = useState(1);
-  const equipmentsPerPage = 5;
+  /** BACKEND PAGINATION */
+  const [page, setPage] = useState(1);
+  const size = 10;
 
-  const [formData, setFormData] = useState({
-    ip: "",
-    site_id: "",
-    marque: "",
-    sources: "",
-    username: "",
-    password: "",
-    description: "",
-    modele: "",
-    status: "active",
-  });
+  /** API CALL */
+  const {
+    data: apiResponse,
+    error,
+    isLoading,
+    refetch,
+  } = useListEquipementsQuery({ page, size });
 
-  // Load mock data
-  useEffect(() => {
-    setTimeout(() => {
-      setEquipments([
-        {
-          id: 1,
-          ip: "192.168.1.10",
-          site_id: "Site A",
-          marque: "Cisco",
-          sources: "SNMP",
-          username: "admin",
-          password: "••••••",
-          description: "Capteur principal",
-          modele: "XRT-200",
-          port: "8080",
-          status: "active",
-          lastUpdate: "2025-10-31 14:32",
-        },
-        {
-          id: 2,
-          ip: "192.168.1.11",
-          site_id: "Site B",
-          marque: "Huawei",
-          sources: "API REST",
-          username: "root",
-          password: "••••••",
-          description: "Capteur secondaire",
-          modele: "HP-900",
-          port: "9090",
-          status: "inactive",
-          lastUpdate: "2025-10-31 14:40",
-        },
-        {
-          id: 3,
-          ip: "192.168.1.10",
-          site_id: "Site A",
-          marque: "Cisco",
-          sources: "SNMP",
-          username: "admin",
-          password: "••••••",
-          description: "Capteur principal",
-          modele: "XRT-200",
-          port: "8080",
-          status: "active",
-          lastUpdate: "2025-10-31 14:32",
-        },
-        {
-          id: 4,
-          ip: "192.168.1.11",
-          site_id: "Site B",
-          marque: "Huawei",
-          sources: "API REST",
-          username: "root",
-          password: "••••••",
-          description: "Capteur secondaire",
-          modele: "HP-900",
-          port: "9090",
-          status: "inactive",
-          lastUpdate: "2025-10-31 14:40",
-        },
+  /** MUTATIONS */
+  const [deleteEquipement] = useDeleteEquipementMutation();
+  const [updateEquipement] = useUpdateEquipementMutation();
+  const [registerEquipement] = useRegisterEquipementMutation();
 
-        {
-          id: 5,
-          ip: "192.168.1.10",
-          site_id: "Site A",
-          marque: "Cisco",
-          sources: "SNMP",
-          username: "admin",
-          password: "••••••",
-          description: "Capteur principal",
-          modele: "XRT-200",
-          port: "8080",
-          status: "active",
-          lastUpdate: "2025-10-31 14:32",
-        },
-        {
-          id: 6,
-          ip: "192.168.1.11",
-          site_id: "Site B",
-          marque: "Huawei",
-          sources: "API REST",
-          username: "root",
-          password: "••••••",
-          description: "Capteur secondaire",
-          modele: "HP-900",
-          port: "9090",
-          status: "inactive",
-          lastUpdate: "2025-10-31 14:40",
-        },
-      ]);
-      setLoading(false);
-    }, 800);
-  }, []);
+  /** MOCK DATA (fallback or merge preview) */
+  const mockEquipments = [
+    {
+      id: 1,
+      ip: "192.168.1.10",
+      site_id: "Site A",
+      marque: "Cisco",
+      sources: "SNMP",
+      username: "admin",
+      password: "••••••",
+      description: "Capteur principal",
+      modele: "XRT-200",
+      port: "8080",
+      status: "active",
+      lastUpdate: "2025-10-31 14:32",
+    },
+    {
+      id: 2,
+      ip: "192.168.1.11",
+      site_id: "Site B",
+      marque: "Huawei",
+      sources: "API REST",
+      username: "root",
+      password: "••••••",
+      description: "Capteur secondaire",
+      modele: "HP-900",
+      port: "9090",
+      status: "inactive",
+      lastUpdate: "2025-10-31 14:40",
+    },
+  ];
 
-  // Filtering equipments
+  /** TRANSFORM API RESPONSE TO MATCH UI SHAPE */
+  const apiEquipments =
+    apiResponse?.items?.map((eq) => ({
+      id: eq.equipement_id,
+      ip: eq.ip,
+      marque: eq.marque,
+      modele: eq.modele,
+      sources: eq.sources?.join(", "),
+      port: eq.port,
+      username: eq.username,
+      password: eq.password,
+      description: eq.description,
+      site_id: eq.client_site?.name || "—",
+      status: "active",
+      lastUpdate: eq.timestamp,
+    })) || [];
+
+  /** MERGE: API FIRST, fallback to mock if empty */
+  const equipments = apiEquipments.length > 0 ? apiEquipments : mockEquipments;
+
+  /** FILTERING */
   const filteredEquipments = useMemo(() => {
     const term = searchTerm.toLowerCase();
+
     return equipments.filter((eq) => {
       const matchesSearch =
         eq.ip.toLowerCase().includes(term) ||
         eq.marque.toLowerCase().includes(term) ||
         eq.modele.toLowerCase().includes(term);
+
       const matchesStatus =
         statusFilter === "all" || eq.status === statusFilter;
+
       return matchesSearch && matchesStatus;
     });
   }, [equipments, searchTerm, statusFilter]);
 
-  // ✅ Pagination logic
-  const indexOfLastEquipment = currentPage * equipmentsPerPage;
-  const indexOfFirstEquipment = indexOfLastEquipment - equipmentsPerPage;
-  const currentEquipments = filteredEquipments.slice(
-    indexOfFirstEquipment,
-    indexOfLastEquipment
-  );
-  const totalPages = Math.ceil(filteredEquipments.length / equipmentsPerPage);
+  /** PAGINATION */
+  const totalPages = apiResponse?.pages || 1;
 
-  const handlePageChange = (page) => setCurrentPage(page);
-
-  useEffect(() => {
-    if (currentPage > totalPages) setCurrentPage(1);
-  }, [totalPages]);
-
-  // ✅ Modal Logic
   const handleOpenModal = (mode, equipment = null) => {
     setModalMode(mode);
-    if (equipment) {
-      setSelectedEquipment(equipment);
-      setFormData({ ...equipment });
-    } else {
-      setFormData({
-        ip: "",
-        site_id: "",
-        marque: "",
-        sources: "",
-        username: "",
-        password: "",
-        description: "",
-        modele: "",
-        status: "active",
-      });
-      setSelectedEquipment(null);
-    }
+    setSelectedEquipment(equipment || null);
     setShowModal(true);
   };
 
@@ -193,45 +133,52 @@ const EquipmentsPage = () => {
     setSelectedEquipment(null);
   };
 
-  const handleSubmit = (e) => {
+  /** SUBMIT (ADD or EDIT) — API + fallback mock mode */
+  const handleSubmit = async (e, formData) => {
     e.preventDefault();
-    if (modalMode === "add") {
-      const newEquipment = {
-        id: Date.now(),
-        ...formData,
-        lastUpdate: new Date().toLocaleString(),
-      };
-      setEquipments([...equipments, newEquipment]);
-    } else if (modalMode === "edit" && selectedEquipment) {
-      setEquipments(
-        equipments.map((eq) =>
-          eq.id === selectedEquipment.id ? { ...eq, ...formData } : eq
-        )
-      );
+
+    try {
+      if (modalMode === "add") {
+        await registerEquipement(formData).unwrap();
+      } else if (modalMode === "edit") {
+        await updateEquipement(formData).unwrap();
+      }
+
+      refetch();
+      handleCloseModal();
+    } catch (err) {
+      console.error("API error:", err);
+      alert("Erreur API — Les données mock sont affichées.");
     }
-    handleCloseModal();
   };
 
-  // 🗑️ Delete Confirmation
+  /** DELETE */
   const handleDeleteRequest = (id) => {
     setDeleteId(id);
     setCountdown(5);
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
-    setEquipments(equipments.filter((eq) => eq.id !== deleteId));
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteEquipement(deleteId).unwrap();
+      refetch();
+    } catch (err) {
+      console.log("Erreur API suppression:", err);
+    }
+
     setShowDeleteModal(false);
   };
 
-  // ⏳ Countdown timer
+  /** COUNTDOWN */
   useEffect(() => {
-    if (!showDeleteModal) return;
-    if (countdown === 0) return;
+    if (!showDeleteModal || countdown === 0) return;
+
     const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
     return () => clearTimeout(timer);
-  }, [countdown, showDeleteModal]);
+  }, [showDeleteModal, countdown]);
 
+  /** UI */
   return (
     <div className="p-6 space-y-6">
       {/* HEADER */}
@@ -251,21 +198,22 @@ const EquipmentsPage = () => {
         </div>
       </motion.div>
 
-      {/* SEARCH + FILTER + ADD */}
+      {/* SEARCH + ADD */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
         <input
           type="text"
-          placeholder="Rechercher par IP, Marque ou Modèle"
+          placeholder="Rechercher..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 px-4 py-2 border border-gray-300 rounded focus:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none transition-colors"
+          className="flex-1 px-4 py-2 border rounded"
         />
+
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded focus:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none transition-colors"
+          className="px-4 py-2 border rounded"
         >
-          <option value="all">Tous statuts</option>
+          <option value="all">Tous</option>
           <option value="active">Actif</option>
           <option value="inactive">Inactif</option>
         </select>
@@ -274,147 +222,86 @@ const EquipmentsPage = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => handleOpenModal("add")}
-          className="ml-2 bg-gradient-to-r from-blue-600 to-green-600 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2 font-medium"
+          className="ml-2 bg-gradient-to-r from-blue-600 to-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2"
         >
-          <FaPlus />
-          Nouvel Équipement
+          <FaPlus /> Nouvel Équipement
         </motion.button>
       </div>
 
       {/* TABLE */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="bg-white rounded-xl shadow-lg overflow-hidden"
-      >
-        <div className="bg-gradient-to-r from-green-600 to-cyan-600 p-6 border-b border-gray-100">
-          <h2 className="text-lg font-bold text-gray-800">
-            Liste des Équipements
-          </h2>
-        </div>
-
-        {loading ? (
+      <motion.div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        {isLoading ? (
           <div className="p-12 text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-blue-600"></div>
-            <p className="text-gray-500 mt-4">Chargement des équipements...</p>
+            <div className="inline-block animate-spin h-10 w-10 border-4 border-gray-300 border-t-blue-600 rounded-full"></div>
+            <p className="mt-4 text-gray-500">Chargement...</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full table-fixed">
+            <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
-                    IP
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
-                    Marque
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
-                    Modèle
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
-                    Port
-                  </th>
-                  {/* SITE - header centered to match cells */}
-                  <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
-                    Site
-                  </th>
-                  {/* STATUT - header centered to match badge cell */}
-                  <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
-                    Statut
-                  </th>
-                  {/* ACTIONS - header centered to match action buttons */}
-                  <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
-                    Actions
-                  </th>
+                  <th className="p-4">IP</th>
+                  <th className="p-4">Marque</th>
+                  <th className="p-4">Modèle</th>
+                  <th className="p-4">Port</th>
+                  <th className="p-4 text-center">Site</th>
+                  <th className="p-4 text-center">Statut</th>
+                  <th className="p-4 text-center">Actions</th>
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-200">
-                <AnimatePresence mode="wait">
-                  {currentEquipments.length === 0 ? (
+              <tbody className="divide-y">
+                <AnimatePresence>
+                  {filteredEquipments.map((eq) => (
                     <motion.tr
-                      key="empty"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
+                      key={eq.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0 }}
                     >
-                      <td
-                        colSpan="7"
-                        className="text-center py-6 text-gray-500 italic"
-                      >
-                        Aucun équipement trouvé.
+                      <td className="p-4">{eq.ip}</td>
+                      <td>{eq.marque}</td>
+                      <td>{eq.modele}</td>
+                      <td>{eq.port}</td>
+                      <td className="text-center">{eq.site_id}</td>
+                      <td className="text-center">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs ${
+                            eq.status === "active"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-red-100 text-red-700"
+                          }`}
+                        >
+                          {eq.status}
+                        </span>
+                      </td>
+
+                      <td className="p-4 text-center">
+                        <div className="flex justify-center gap-2">
+                          <button
+                            onClick={() => handleOpenModal("view", eq)}
+                            className="p-2 bg-blue-100 text-blue-600 rounded"
+                          >
+                            <FaEye />
+                          </button>
+
+                          <button
+                            onClick={() => handleOpenModal("edit", eq)}
+                            className="p-2 bg-yellow-100 text-yellow-600 rounded"
+                          >
+                            <FaEdit />
+                          </button>
+
+                          <button
+                            onClick={() => handleDeleteRequest(eq.id)}
+                            className="p-2 bg-red-100 text-red-600 rounded"
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
                       </td>
                     </motion.tr>
-                  ) : (
-                    currentEquipments.map((eq) => (
-                      <motion.tr
-                        key={eq.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2 }}
-                        className="hover:bg-gray-50 transition"
-                      >
-                        <td className="px-6 py-4 text-left">{eq.ip}</td>
-                        <td className="px-6 py-4 text-left">{eq.marque}</td>
-                        <td className="px-6 py-4 text-left">{eq.modele}</td>
-                        <td className="px-6 py-4 text-left">{eq.port}</td>
-
-                        {/* SITE cell centered */}
-                        <td className="px-6 py-4 text-center">{eq.site_id}</td>
-
-                        {/* STATUT cell centered with badge */}
-                        <td className="px-6 py-4 text-center">
-                          <span
-                            className={`px-3 py-1 rounded-full text-xs font-medium ${
-                              eq.status === "active"
-                                ? "bg-green-100 text-green-700"
-                                : "bg-red-100 text-red-700"
-                            }`}
-                          >
-                            {eq.status}
-                          </span>
-                        </td>
-
-                        {/* ACTIONS centered to align with header */}
-                        <td className="px-6 py-4 text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            <motion.button
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                              onClick={() => handleOpenModal("view", eq)}
-                              className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
-                              title="Voir les détails"
-                            >
-                              <FaEye />
-                            </motion.button>
-
-                            <motion.button
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                              onClick={() => handleOpenModal("edit", eq)}
-                              className="p-2 bg-yellow-100 text-yellow-600 rounded-lg hover:bg-yellow-200 transition-colors"
-                              title="Modifier"
-                            >
-                              <FaEdit />
-                            </motion.button>
-
-                            <motion.button
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                              onClick={() => handleDeleteRequest(eq.id)}
-                              className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
-                              title="Supprimer"
-                            >
-                              <FaTrash />
-                            </motion.button>
-                          </div>
-                        </td>
-                      </motion.tr>
-                    ))
-                  )}
+                  ))}
                 </AnimatePresence>
               </tbody>
             </table>
@@ -422,120 +309,83 @@ const EquipmentsPage = () => {
         )}
       </motion.div>
 
-      {/* ✅ NEW PAGINATION CONTROLS */}
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 py-6">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className={`px-3 py-1 rounded-lg border ${
-              currentPage === 1
-                ? "text-gray-400 border-gray-200 cursor-not-allowed"
-                : "text-blue-600 border-blue-400 hover:bg-blue-50"
-            }`}
-          >
-            Précédent
-          </button>
+      {/* PAGINATION */}
+      <div className="flex justify-center gap-2 py-6">
+        <button
+          className="px-3 py-1 border rounded"
+          disabled={page === 1}
+          onClick={() => setPage(page - 1)}
+        >
+          Précédent
+        </button>
 
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => handlePageChange(i + 1)}
-              className={`px-3 py-1 rounded-lg ${
-                currentPage === i + 1
-                  ? "bg-gradient-to-r from-blue-600 to-green-600 text-white shadow"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
+        <span className="px-4 py-1">
+          Page {page} / {totalPages}
+        </span>
 
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className={`px-3 py-1 rounded-lg border ${
-              currentPage === totalPages
-                ? "text-gray-400 border-gray-200 cursor-not-allowed"
-                : "text-blue-600 border-blue-400 hover:bg-blue-50"
-            }`}
-          >
-            Suivant
-          </button>
-        </div>
-      )}
+        <button
+          className="px-3 py-1 border rounded"
+          disabled={page === totalPages}
+          onClick={() => setPage(page + 1)}
+        >
+          Suivant
+        </button>
+      </div>
 
-      {/* MODALS */}
+      {/* MODAL ADD/EDIT/VIEW */}
       <AddEquipment
         showModal={showModal}
         handleCloseModal={handleCloseModal}
-        handleSubmit={handleSubmit}
-        formData={formData}
-        setFormData={setFormData}
         modalMode={modalMode}
         selectedEquipment={selectedEquipment}
+        onSubmit={handleSubmit}
       />
 
-      {/* DELETE CONFIRMATION */}
+      {/* DELETE CONFIRMATION MODAL */}
       <AnimatePresence>
         {showDeleteModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
-            >
+          <motion.div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <motion.div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
               <div className="bg-gradient-to-r from-blue-600 to-green-600 p-6 text-white">
                 <h2 className="text-xl font-bold">
                   Confirmation de suppression
                 </h2>
               </div>
 
-              <div className="p-6 space-y-5 text-center">
-                <FaTrash className="text-red-500 text-4xl mx-auto mb-2" />
-                <p className="text-gray-700 leading-relaxed">
-                  Êtes-vous sûr de vouloir supprimer cet équipement ?<br />
-                  Cette action est{" "}
-                  <span className="font-semibold text-red-500">
-                    irréversible
+              <div className="p-6 text-center">
+                <FaTrash className="text-red-500 text-4xl mx-auto mb-3" />
+
+                <p className="text-gray-700 mb-4">
+                  Êtes-vous sûr de vouloir supprimer cet équipement ?
+                  <br />
+                  <span className="text-red-500 font-semibold">
+                    Cette action est irréversible.
                   </span>
-                  .
                 </p>
 
-                <div className="flex justify-center items-center gap-2 text-gray-500 text-sm">
-                  <FaClock /> Attendez encore {countdown}s avant de confirmer.
+                <div className="text-gray-500 flex justify-center items-center gap-2 text-sm mb-4">
+                  <FaClock /> Attendez encore {countdown}s...
                 </div>
 
-                <div className="flex gap-3 pt-4">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                <div className="flex gap-4">
+                  <button
                     onClick={() => setShowDeleteModal(false)}
-                    className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-all font-medium flex items-center justify-center gap-2"
+                    className="flex-1 border py-2 rounded"
                   >
-                    <FaTimes /> Annuler
-                  </motion.button>
+                    Annuler
+                  </button>
 
-                  <motion.button
-                    whileHover={{ scale: countdown === 0 ? 1.05 : 1 }}
-                    whileTap={{ scale: countdown === 0 ? 0.95 : 1 }}
+                  <button
                     disabled={countdown > 0}
                     onClick={handleConfirmDelete}
-                    className={`flex-1 px-4 py-3 rounded-lg font-medium text-white flex items-center justify-center gap-2 transition-all ${
+                    className={`flex-1 py-2 rounded text-white ${
                       countdown > 0
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-gradient-to-r from-blue-600 to-green-600 hover:from-red-700 hover:to-red-600 shadow-lg"
+                        ? "bg-gray-400"
+                        : "bg-red-600 hover:bg-red-700"
                     }`}
                   >
-                    <FaTrash />
-                    {countdown > 0 ? "Veuillez patienter..." : "Confirmer"}
-                  </motion.button>
+                    Confirmer
+                  </button>
                 </div>
               </div>
             </motion.div>
@@ -547,3 +397,4 @@ const EquipmentsPage = () => {
 };
 
 export default EquipmentsPage;
+

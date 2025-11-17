@@ -1,13 +1,18 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  useListClientsQuery,
+  useCreateClientMutation,
+  useUpdateClientMutation,
+  useDeleteClientMutation,
+} from "../services/api/clientApi";
+
 import {
   FaUsers,
   FaBuilding,
   FaServer,
-  FaCheckCircle,
   FaExclamationTriangle,
-  FaTimesCircle,
   FaPlus,
   FaEdit,
   FaTrash,
@@ -18,8 +23,13 @@ import {
 } from "react-icons/fa";
 
 const ClientsPage = () => {
-  const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data: clients = [], isLoading } = useListClientsQuery();
+  console.log("client",clients);
+  
+  const [createClient] = useCreateClientMutation();
+  const [updateClient] = useUpdateClientMutation();
+  const [deleteClient] = useDeleteClientMutation();
+
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState("add");
   const [selectedClient, setSelectedClient] = useState(null);
@@ -27,112 +37,28 @@ const ClientsPage = () => {
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [formData, setFormData] = useState({ nom: "", code: "" });
 
-  //pagination states
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const clientsPerPage = 5;
-
-  //pagination logic
   const indexOfLastClient = currentPage * clientsPerPage;
   const indexOfFirstClient = indexOfLastClient - clientsPerPage;
   const currentClients = clients.slice(indexOfFirstClient, indexOfLastClient);
   const totalPages = Math.ceil(clients.length / clientsPerPage);
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  // Search and filter states
+  // Search & filter
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  // 🌀 Load Clients (Simulation)
-  useEffect(() => {
-    loadClients();
-  }, []);
+  const filteredClients = clients.filter((client) => {
+    const matchSearch =
+      client.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.code.toString().includes(searchTerm);
+    const matchStatus =
+      statusFilter === "all" || client.status === statusFilter;
+    return matchSearch && matchStatus;
+  });
 
-  const loadClients = async () => {
-    setLoading(true);
-    setTimeout(() => {
-      const mockClients = [
-        {
-          client_id: "1",
-          nom: "CAMTEL",
-          code: 101,
-          sites: 5,
-          equipements: 45,
-          status: "actif",
-          timestamp: "2025-01-15T10:30:00Z",
-        },
-        {
-          client_id: "2",
-          nom: "MTN Cameroon",
-          code: 102,
-          sites: 8,
-          equipements: 72,
-          status: "actif",
-          timestamp: "2025-02-20T14:15:00Z",
-        },
-        {
-          client_id: "3",
-          nom: "Orange Cameroun",
-          code: 103,
-          sites: 6,
-          equipements: 58,
-          status: "inactif",
-          timestamp: "2025-03-10T09:45:00Z",
-        },
-        {
-          client_id: "4",
-          nom: "ENEO",
-          code: 104,
-          sites: 12,
-          equipements: 95,
-          status: "actif",
-          timestamp: "2025-04-05T11:20:00Z",
-        },
-        {
-          client_id: "5",
-          nom: "CAMTEL",
-          code: 101,
-          sites: 5,
-          equipements: 45,
-          status: "actif",
-          timestamp: "2025-01-15T10:30:00Z",
-        },
-        {
-          client_id: "6",
-          nom: "MTN Cameroon",
-          code: 102,
-          sites: 8,
-          equipements: 72,
-          status: "actif",
-          timestamp: "2025-02-20T14:15:00Z",
-        },
-        {
-          client_id: "7",
-          nom: "Orange Cameroun",
-          code: 103,
-          sites: 6,
-          equipements: 58,
-          status: "inactif",
-          timestamp: "2025-03-10T09:45:00Z",
-        },
-        {
-          client_id: "8",
-          nom: "ENEO",
-          code: 104,
-          sites: 12,
-          equipements: 95,
-          status: "actif",
-          timestamp: "2025-04-05T11:20:00Z",
-        },
-      ];
-      setClients(mockClients);
-      setLoading(false);
-    }, 1000);
-  };
-
-  // 🟢 Modal Management
+  // Modal management
   const handleOpenModal = (mode, client = null) => {
     setModalMode(mode);
     if (mode === "edit" && client) {
@@ -151,42 +77,22 @@ const ClientsPage = () => {
     setSelectedClient(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (modalMode === "add") {
-      const newClient = {
-        client_id: Date.now().toString(),
-        nom: formData.nom,
-        code: parseInt(formData.code),
-        sites: 0,
-        equipements: 0,
-        status: "actif",
-        timestamp: new Date().toISOString(),
-      };
-      setClients([...clients, newClient]);
-    } else {
-      const updatedClients = clients.map((client) =>
-        client.client_id === selectedClient.client_id
-          ? { ...client, nom: formData.nom, code: parseInt(formData.code) }
-          : client
-      );
-      setClients(updatedClients);
+      await createClient(formData);
+    } else if (selectedClient) {
+      await updateClient({ ...selectedClient, ...formData });
     }
     handleCloseModal();
   };
 
-  // 🧨 Delete with confirmation modal
-  const confirmDeleteClient = () => {
+  // Delete
+  const confirmDeleteClient = async () => {
     if (confirmDelete) {
-      setClients((prev) =>
-        prev.filter((c) => c.client_id !== confirmDelete.client_id)
-      );
+      await deleteClient(confirmDelete.client_id);
       setConfirmDelete(null);
     }
-  };
-
-  const handleDelete = (client) => {
-    setConfirmDelete(client);
   };
 
   const handleViewDetails = (client) => {
@@ -194,17 +100,7 @@ const ClientsPage = () => {
     setShowDetails(true);
   };
 
-  // Filtering logic
-  const filteredClients = clients.filter((client) => {
-    const matchSearch =
-      client.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      client.code.toString().includes(searchTerm);
-    const matchStatus =
-      statusFilter === "all" || client.status === statusFilter;
-    return matchSearch && matchStatus;
-  });
-
-  // 📊 Stats
+  // Stats
   const stats = {
     totalClients: clients.length,
     totalSites: clients.reduce((sum, c) => sum + c.sites, 0),
@@ -269,7 +165,7 @@ const ClientsPage = () => {
           <h2 className="text-lg font-bold text-gray-800">Liste des Clients</h2>
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="p-12 text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-blue-600"></div>
             <p className="text-gray-500 mt-4">Chargement des clients...</p>
@@ -387,7 +283,6 @@ const ClientsPage = () => {
               </tbody>
             </table>
 
-            
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="flex justify-center items-center gap-2 py-6">
